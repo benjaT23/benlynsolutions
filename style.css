@@ -644,6 +644,25 @@ header nav a {
     gap: .25rem;
 }
 
+.order-main {
+    display: grid;
+    gap: .25rem;
+}
+
+.whatsapp-order {
+    background: linear-gradient(90deg, #00a884, #00d084);
+    border-radius: 6px;
+    color: #fff;
+    display: inline-block;
+    font-weight: 700;
+    padding: .55rem .8rem;
+    text-decoration: none;
+}
+
+.whatsapp-order:hover {
+    box-shadow: 0 0 14px rgba(0, 208, 132, .55);
+}
+
 @media (max-width: 768px) {
     header {
         align-items: flex-start;

@@ -1,0 +1,71 @@
+/* --- Estilos para la página de detalles del producto --- */
+
+.product-details-page {
+    padding: 20px; /* Espaciado general alrededor del contenido de la página de detalles */
+}
+
+.product-details {
+    display: flex; /* Utiliza flexbox para la disposición de imagen y detalles */
+    gap: 30px; /* Espacio entre la galería de imágenes y la información del producto */
+    max-width: 1000px; /* Ancho máximo para la sección principal de detalles */
+    margin: 20px auto; /* Centra la sección en la página */
+    background-color: #fff; /* Fondo blanco para la tarjeta de detalles */
+    padding: 30px; /* Relleno dentro de la tarjeta de detalles */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.image-gallery {
+    flex: 1; /* Ocupa un espacio flexible en el layout */
+}
+
+.main-image {
+    margin-bottom: 15px;
+    border-radius: 5px;
+    overflow: hidden; /* Asegura que la imagen no se salga de los bordes redondeados */
+    border: 1px solid #eee; /* Borde sutil alrededor de la imagen principal */
+}
+
+.main-image img {
+    width: 100%; /* La imagen ocupa todo el ancho del contenedor */
+    display: block; /* Elimina espacio extra debajo de la imagen */
+}
+
+.thumbnails {
+    display: flex; /* Utiliza flexbox para las miniaturas */
+    gap: 10px; /* Espacio entre miniaturas */
+}
+
+.thumbnails img {
+    width: 80px; /* Ancho fijo para las miniaturas */
+    height: 80px; /* Altura fija para las miniaturas */
+    object-fit: cover; /* Cubre el área manteniendo el aspecto, recortando si es necesario */
+    border-radius: 5px;
+    cursor: pointer; /* Indica que es clickable */
+    border: 1px solid #eee;
+    transition: border-color 0.3s ease; /* Transición suave para el borde */
+}
+
+.thumbnails img:hover,
+.thumbnails img.active { /* Estilo al pasar el mouse o cuando está activa */
+    border-color: #007bff; /* Borde azul */
+}
+
+.product-info {
+    flex: 1; /* Ocupa un espacio flexible similar a la galería de imágenes */
+    display: flex;
+    flex-direction: column; /* Organiza los elementos en columna */
+    justify-content: space-between; /* Distribuye el espacio entre los elementos */
+}
+
+.product-title {
+    font-size: 2em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.product-description {
+    font-size: 1.2em;
+    color: #666;
+    margin-bottom: 20px;
+}

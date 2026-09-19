@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración - BENLYNSOLUTIONS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header><a class="logo" href="index.html"><img src="MisLogos/LOGO.jpeg" alt="" aria-hidden="true">BENLYNSOLUTIONS</a></header>
+    <main class="store-page">
+        <section class="page-header"><p class="eyebrow">Área privada</p><h1>Administración</h1><p>Gestiona inventario, precios, imágenes y pedidos desde este dispositivo.</p></section>
+        <form id="admin-login" class="panel admin-login">
+            <label>Clave de administrador <input id="admin-pin" type="password" required autocomplete="current-password"></label>
+            <button class="button" type="submit">Entrar</button>
+            <p id="admin-login-message" class="form-message" role="alert"></p>
+        </form>
+        <section id="admin-content" class="panel" hidden>
+            <div class="panel-heading"><h2>Inventario y pedidos</h2><button id="admin-logout" class="button button-secondary" type="button">Cerrar sesión</button></div>
+            <p class="notice">Para una imagen local, coloca el archivo dentro del proyecto y escribe su ruta, por ejemplo: <code>imgCargadores/cargador-20w.jpg</code>.</p>
+            <div id="admin-products"></div>
+            <h3>Pedidos recibidos</h3>
+            <div id="admin-orders"></div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

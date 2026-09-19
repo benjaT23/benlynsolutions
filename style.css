@@ -1,0 +1,791 @@
+body {
+    font-family: 'Arial', sans-serif; /* Fuente más común y limpia */
+    margin: 0;
+    background-color: #f8f8f8; /* Fondo más claro, similar a la referencia */
+    color: #333; /* Texto oscuro para contraste */
+    line-height: 1.6;
+}
+
+header {
+    background-color: #ffffff; /* Fondo blanco */
+    border-bottom: 1px solid #e0e0e0; /* Borde sutil en la parte inferior */
+    padding: 1em 4em; /* Más padding para los lados para que se vea como la referencia */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Sombra suave para el encabezado */
+}
+
+.logo {
+    font-size: 1.8em; /* Logo más grande */
+    font-weight: bold;
+    color: #333; /* Color oscuro para el logo */
+    text-transform: uppercase; /* Mayúsculas como en la referencia */
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 25px; /* Espacio entre elementos de navegación */
+}
+
+nav ul li a {
+    display: block;
+    color: #555; /* Color de texto más suave */
+    text-decoration: none;
+    padding: 0.5em 0; /* Menos padding vertical */
+    font-weight: 600; /* Texto seminegrita */
+    position: relative; /* Necesario para el efecto de subrayado */
+    transition: color 0.3s ease; /* Transición suave para el color del texto */
+}
+
+nav ul li a::after { /* Crea el elemento que será el subrayado */
+    content: '';
+    position: absolute;
+    width: 0; /* Empieza sin ancho */
+    height: 2px;
+    bottom: -5px; /* Posiciona el subrayado debajo del texto */
+    left: 0;
+    background-color: #007bff; /* Color del subrayado al pasar el mouse */
+    transition: width 0.3s ease; /* Transición suave para el ancho del subrayado */
+}
+
+nav ul li a:hover {
+    color: #007bff; /* Cambia el color del texto al pasar el mouse */
+}
+
+nav ul li a:hover::after {
+    width: 100%; /* El subrayado se extiende a todo el ancho al pasar el mouse */
+}
+
+
+main {
+    padding: 2em 4em; /* Aumentar el padding lateral para coincidir con el header */
+    max-width: 1200px; /* Limitar el ancho del contenido principal para que no se extienda demasiado */
+    margin: 20px auto; /* Centrar el contenido principal en la página */
+}
+
+.hero {
+    background-color: #e6f2ff; /* Un azul claro para la sección hero */
+    padding: 4em 3em; /* Más padding para un área destacada grande */
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 3em;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08); /* Sombra más pronunciada para la sección hero */
+}
+
+.hero-content h1 {
+    font-size: 3em; /* Título principal más grande */
+    margin-bottom: 0.5em;
+    color: #2c3e50; /* Un azul oscuro para el título */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05); /* Sombra de texto suave */
+}
+
+.hero-content p {
+    font-size: 1.3em; /* Párrafo más grande */
+    color: #555;
+    margin-bottom: 2em;
+    max-width: 700px; /* Limitar el ancho del párrafo para mejor legibilidad */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.button {
+    display: inline-block;
+    background-color: #007bff; /* Azul vibrante para los botones principales */
+    color: #fff;
+    padding: 1em 2.5em; /* Padding generoso */
+    text-decoration: none;
+    border-radius: 50px; /* Botones más redondeados (pill-shaped) */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transición para color y tamaño */
+    font-weight: bold;
+    letter-spacing: 0.5px; /* Pequeño espaciado entre letras */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Sombra para los botones */
+}
+
+.button:hover {
+    background-color: #0056b3; /* Azul más oscuro al pasar el mouse */
+    transform: translateY(-2px); /* Pequeño efecto de elevación al pasar el mouse */
+}
+
+.featured-products {
+    margin-top: 3em; /* Espacio superior para la sección de productos destacados */
+}
+
+.featured-products h2 {
+    font-size: 2.2em; /* Título de sección más grande */
+    color: #333;
+    text-align: center;
+    margin-bottom: 1.5em;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.featured-products h2::after { /* Subrayado decorativo para el título de sección */
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 3px;
+    background-color: #007bff; /* Color azul */
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+
+.product-grid {
+    display: grid;
+    /* Grid responsivo: Minimo 280px, se ajusta a columnas disponibles */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px; /* Más espacio entre tarjetas */
+}
+
+.product-card {
+    background-color: #ffffff; /* Fondo blanco para las tarjetas de producto */
+    padding: 20px;
+    border-radius: 10px; /* Bordes más redondeados */
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Sombra más notable */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición para elevación y sombra */
+    overflow: hidden; /* Para contener las imágenes si sobresalen */
+    display: flex; /* Para mejor alineación de contenido dentro de la tarjeta */
+    flex-direction: column;
+    justify-content: space-between; /* Para empujar el botón al final de la tarjeta */
+}
+
+.product-card:hover {
+    transform: translateY(-5px); /* Efecto de elevación al pasar el mouse */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* Sombra más fuerte al pasar el mouse */
+}
+
+.product-card img {
+    max-width: 100%;
+    height: 180px; /* Altura fija para las imágenes de los productos */
+    object-fit: contain; /* Asegura que la imagen se ajuste sin distorsionarse */
+    border-radius: 5px;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease; /* Transición para el zoom de la imagen */
+}
+
+.product-image-placeholder {
+    align-items: center;
+    background: repeating-linear-gradient(135deg, #101b38, #101b38 10px, #17264b 10px, #17264b 20px);
+    border: 1px dashed rgba(0, 229, 255, .55);
+    border-radius: 5px;
+    color: #9ddff0;
+    display: flex;
+    font-size: .85rem;
+    height: 180px;
+    justify-content: center;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.product-card:hover img {
+    transform: scale(1.03); 
+}
+
+/* Tienda, carrito y administración */
+.eyebrow {
+    color: #007bff;
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.logo {
+    align-items: center;
+    display: inline-flex;
+    gap: .55rem;
+    text-decoration: none;
+}
+
+.logo img {
+    height: 2.15rem;
+    width: 2.15rem;
+    border-radius: .45rem;
+    object-fit: cover;
+}
+
+.company-logo-banner {
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .16);
+    display: block;
+    margin: 0 auto 1.5rem;
+    max-height: 180px;
+    max-width: min(100%, 680px);
+    object-fit: cover;
+}
+
+header nav {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+header nav a {
+    color: #555;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.cart-link {
+    color: #007bff !important;
+}
+
+#cart-count {
+    display: inline-grid;
+    min-width: 1.4rem;
+    height: 1.4rem;
+    place-items: center;
+    border-radius: 50%;
+    background: #007bff;
+    color: #fff;
+    font-size: .75rem;
+}
+
+.store-page {
+    max-width: 1180px;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.store-toolbar {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+    margin-bottom: 2rem;
+}
+
+.store-toolbar label,
+.checkout-layout label {
+    display: grid;
+    gap: .35rem;
+    font-weight: 700;
+}
+
+.store-toolbar input,
+.store-toolbar select,
+.checkout-layout input,
+.checkout-layout select,
+.checkout-layout textarea,
+.stock-input {
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid #d4dbe5;
+    border-radius: 6px;
+    padding: .7rem;
+    font: inherit;
+}
+
+.store-toolbar label:first-child { flex: 1; }
+
+.product-category {
+    color: #007bff;
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.price {
+    color: #172b4d;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.stock {
+    color: #4d6b52;
+    font-size: .9rem;
+}
+
+.button:disabled {
+    cursor: not-allowed;
+    opacity: .5;
+}
+
+.checkout-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+.panel {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.08);
+    padding: 1.5rem;
+}
+
+.checkout-layout form {
+    display: grid;
+    gap: 1rem;
+}
+
+.notice {
+    border-left: 4px solid #f0ad4e;
+    background: #fff8e8;
+    color: #6b531f;
+    font-size: .9rem;
+    padding: .75rem 1rem;
+}
+
+.cart-line,
+.admin-row,
+.order-row {
+    align-items: center;
+    border-bottom: 1px solid #edf0f4;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    padding: 1rem 0;
+}
+
+.cart-line small {
+    display: block;
+    color: #777;
+}
+
+.quantity-controls {
+    align-items: center;
+    display: flex;
+    gap: .5rem;
+}
+
+.quantity-controls button {
+    border: 1px solid #ccd5e0;
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: .35rem .6rem;
+}
+
+.quantity-controls .remove {
+    color: #b42318;
+    border: 0;
+}
+
+.total-line {
+    font-size: 1.2rem;
+    text-align: right;
+}
+
+.form-message {
+    color: #176b3a;
+    font-weight: 700;
+}
+
+.admin-panel {
+    margin-top: 1.5rem;
+}
+
+.panel-heading {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-secondary {
+    background: #172b4d;
+}
+
+.admin-row label {
+    align-items: center;
+    display: flex;
+    gap: .5rem;
+}
+
+.stock-input {
+    width: 5rem;
+}
+
+.order-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .25rem;
+}
+
+@media (max-width: 768px) {
+    header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    /* Identidad visual neon */
+    :root {
+        --neon-blue: #00e5ff;
+        --neon-pink: #ff2bd6;
+        --neon-purple: #9d4edd;
+        --dark-bg: #080b1a;
+        --dark-panel: #11162b;
+    }
+
+    body {
+        background: radial-gradient(circle at 20% 0%, #20204c 0, var(--dark-bg) 42%, #05060d 100%);
+        color: #e9f7ff;
+    }
+
+    header {
+        background: rgba(8, 11, 26, .92);
+        border-bottom: 1px solid rgba(0, 229, 255, .35);
+        box-shadow: 0 0 22px rgba(0, 229, 255, .12);
+    }
+
+    .logo { color: #fff; text-shadow: 0 0 10px var(--neon-blue); }
+    header nav a, .product-category { color: var(--neon-blue); }
+    nav ul li a::after { background: var(--neon-pink); box-shadow: 0 0 8px var(--neon-pink); }
+    main { position: relative; }
+    .hero, .panel, .product-card, .contact-grid, .post-card {
+        background: linear-gradient(145deg, rgba(20, 27, 55, .96), rgba(10, 13, 30, .96));
+        border: 1px solid rgba(0, 229, 255, .3);
+        box-shadow: 0 0 20px rgba(0, 229, 255, .1), inset 0 0 18px rgba(157, 78, 221, .08);
+    }
+    .hero-content h1, .featured-products h2, .page-header h1, .panel h2 { color: #fff; text-shadow: 0 0 14px var(--neon-blue); }
+    .hero-content p, .product-card p, .notice { color: #c4d6e5; }
+    .button { background: linear-gradient(90deg, #007bff, var(--neon-purple)); box-shadow: 0 0 14px rgba(0, 229, 255, .45); }
+    .button:hover { background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple)); box-shadow: 0 0 20px rgba(255, 43, 214, .65); }
+    .store-toolbar input, .store-toolbar select, .checkout-layout input, .checkout-layout select, .checkout-layout textarea, .stock-input {
+        background: #0d1226; border-color: rgba(0, 229, 255, .45); color: #fff;
+    }
+    .notice { background: rgba(255, 43, 214, .08); border-left-color: var(--neon-pink); }
+    .payment-panel { border-top: 1px solid rgba(0, 229, 255, .35); margin-top: .5rem; padding-top: 1rem; text-align: center; }
+    .payment-panel h3 { color: var(--neon-pink); text-shadow: 0 0 10px var(--neon-pink); }
+    .yape-qr { background: #fff; border-radius: 10px; display: block; margin: 1rem auto; max-width: 260px; width: 100%; }
+    .button-whatsapp { background: linear-gradient(90deg, #00a884, #00d084); }
+    .form-message { color: var(--neon-blue); text-shadow: 0 0 7px rgba(0, 229, 255, .5); }
+    footer { background: #05060d; border-top: 1px solid rgba(255, 43, 214, .25); color: #9cb4c9; }
+    header nav { flex-wrap: wrap; gap: .75rem; }
+    main { padding: 1.5rem 1rem; }
+    .store-toolbar,
+    .checkout-layout { grid-template-columns: 1fr; display: grid; }
+    .hero-content h1 { font-size: 2.2em; }
+}
+
+/*
+ * El resto de las reglas existentes conserva los estilos de las páginas
+ * informativas. El cierre anterior del selector hover se mantiene arriba
+ * para evitar que esas reglas queden anidadas accidentalmente.
+ */
+    /* --- Estilos comunes para secciones de contenido --- */
+.content-section, .blog-posts, .contact-section {
+    padding: 3em 0; /* Espaciado vertical para las secciones */
+}
+
+/* Ajustes finales para pantallas pequeñas y escritorio neón */
+:root {
+    --neon-blue: #00e5ff;
+    --neon-pink: #ff2bd6;
+    --neon-purple: #9d4edd;
+    --dark-bg: #080b1a;
+}
+
+body {
+    background: radial-gradient(circle at 20% 0%, #20204c 0, var(--dark-bg) 42%, #05060d 100%);
+    color: #e9f7ff;
+}
+
+header {
+    background: rgba(8, 11, 26, .94);
+    border-bottom-color: rgba(0, 229, 255, .35);
+    box-shadow: 0 0 22px rgba(0, 229, 255, .12);
+}
+
+.logo { color: #fff; text-shadow: 0 0 10px var(--neon-blue); }
+.hero, .panel, .product-card, .contact-grid, .post-card {
+    background: linear-gradient(145deg, rgba(20, 27, 55, .96), rgba(10, 13, 30, .96));
+    border: 1px solid rgba(0, 229, 255, .3);
+    box-shadow: 0 0 20px rgba(0, 229, 255, .1), inset 0 0 18px rgba(157, 78, 221, .08);
+}
+.hero-content h1, .featured-products h2, .page-header h1, .panel h2 { color: #fff; text-shadow: 0 0 14px var(--neon-blue); }
+.hero-content p, .product-card p, .notice { color: #c4d6e5; }
+.button { background: linear-gradient(90deg, #007bff, var(--neon-purple)); box-shadow: 0 0 14px rgba(0, 229, 255, .45); }
+.button:hover { background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple)); }
+.store-toolbar input, .store-toolbar select, .checkout-layout input, .checkout-layout select, .checkout-layout textarea, .stock-input, .admin-login input {
+    background: #0d1226; border-color: rgba(0, 229, 255, .45); color: #fff;
+}
+.payment-panel { border-top: 1px solid rgba(0, 229, 255, .35); }
+.yape-qr { background: #fff; }
+.button-whatsapp { background: linear-gradient(90deg, #00a884, #00d084); }
+.form-message { color: var(--neon-blue); }
+
+@media (max-width: 600px) {
+    header nav { width: 100%; }
+    header nav a { font-size: .88rem; }
+    .hero { padding: 2rem 1rem; }
+    .hero-content h1 { font-size: 2rem; }
+    .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+    .product-card { padding: .8rem; }
+    .product-card img { height: 125px; }
+    .product-image-placeholder { height: 125px; font-size: .72rem; }
+    .product-card h3 { font-size: 1rem; }
+    .product-card .button { padding: .7rem .5rem; font-size: .8rem; }
+    .cart-line { align-items: flex-start; flex-direction: column; }
+    .quantity-controls { width: 100%; justify-content: flex-end; }
+    .checkout-layout { gap: 1rem; }
+    .panel { padding: 1rem; }
+    .yape-qr { max-width: 220px; }
+}
+
+.admin-row {
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.admin-row label {
+    align-items: center;
+    display: flex;
+    gap: .4rem;
+}
+
+.price-input, .image-input {
+    background: #0d1226;
+    border: 1px solid rgba(0, 229, 255, .45);
+    border-radius: 5px;
+    color: #fff;
+    padding: .45rem;
+}
+
+.price-input { width: 5.5rem; }
+.image-input { min-width: 16rem; }
+
+.container {
+    max-width: 960px; /* Ancho máximo para el contenido */
+    margin: 0 auto; /* Centrar el contenedor */
+    padding: 0 1.5em; /* Padding horizontal */
+}
+
+/* Estilos específicos para la página "Nosotros" */
+.content-section h2 {
+    font-size: 2em;
+    color: #333;
+    text-align: center;
+    margin-bottom: 1em;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.content-section h2::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 3px;
+    background-color: #007bff;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.content-section p, .content-section ul {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 1.5em;
+    text-align: justify; /* Justificar texto para mejor lectura */
+}
+
+.content-section ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.content-section ul li {
+    margin-bottom: 0.8em;
+}
+
+/* --- Estilos para la sección de Blog --- */
+.blog-posts .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.post-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    overflow: hidden; /* Para las esquinas redondeadas de la imagen */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.post-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* Cubre el área manteniendo el aspecto */
+    display: block;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.post-card:hover img {
+    transform: scale(1.03);
+}
+
+.post-card h3 {
+    font-size: 1.4em;
+    color: #333;
+    padding: 15px;
+    margin-bottom: 0.5em;
+}
+
+.post-card .post-meta {
+    font-size: 0.85em;
+    color: #777;
+    padding: 0 15px;
+    margin-bottom: 1em;
+}
+
+.post-card p {
+    font-size: 1em;
+    color: #555;
+    padding: 0 15px 15px;
+    text-align: justify;
+}
+
+.post-card .button {
+    display: inline-block;
+    background-color: #007bff; /* Color de botón para blog */
+    color: #fff;
+    padding: 0.6em 1.2em;
+    text-decoration: none;
+    border-radius: 5px; /* Botones menos redondeados para blog */
+    transition: background-color 0.3s ease;
+    font-weight: normal;
+    font-size: 0.9em;
+    margin: 0 15px 15px;
+}
+
+.post-card .button:hover {
+    background-color: #0056b3;
+    transform: none; /* Elimina la elevación si no la quieres en estos botones */
+}
+
+/* Estilo para un botón más pequeño */
+.button-small {
+    padding: 0.6em 1.2em;
+    font-size: 0.9em;
+    border-radius: 5px;
+}
+.button-small:hover {
+    transform: translateY(0); /* Anula el efecto de elevación de button base */
+}
+
+
+/* --- Estilos para la sección de Contacto --- */
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Columna de info y columna de formulario */
+    gap: 40px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 30px;
+}
+
+.contact-info {
+    padding-right: 20px;
+}
+
+.contact-info h2, .contact-form h2 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 1em;
+}
+
+.contact-info p {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 0.8em;
+    display: flex; /* Para alinear icono y texto */
+    align-items: center;
+}
+.contact-info p i {
+    margin-right: 10px; /* Espacio para iconos si los añades (Font Awesome) */
+    color: #007bff;
+}
+
+.social-links {
+    margin-top: 1.5em;
+}
+
+.social-links a {
+    display: inline-block;
+    margin-right: 15px;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #0056b3;
+}
+
+.form-group {
+    margin-bottom: 1.5em;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5em;
+    color: #333;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box; /* Incluye padding y borde en el ancho total */
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group textarea:focus {
+    border-color: #007bff; /* Borde azul al enfocar */
+    outline: none; /* Eliminar el contorno por defecto */
+}
+
+.form-group textarea {
+    resize: vertical; /* Permite redimensionar verticalmente */
+    min-height: 100px;
+}
+
+.contact-form .button {
+    width: auto; /* Ancho automático para el botón del formulario */
+    padding: 1em 2em;
+}
+
+/* Responsividad para la página de Contacto */
+@media (max-width: 768px) {
+    .contact-grid {
+        grid-template-columns: 1fr; /* Una columna en móviles */
+        padding: 20px;
+    }
+    .contact-info {
+        padding-right: 0;
+        margin-bottom: 2em;
+    }
+}

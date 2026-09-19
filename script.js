@@ -98,7 +98,7 @@
         productsNode.innerHTML = products().map(function (item) { return '<div class="admin-row"><strong>' + escapeHtml(item.name) + '</strong><label>Precio <input class="price-input" data-id="' + item.id + '" type="number" min="0" step="0.01" value="' + item.price + '"></label><label>Stock <input class="stock-input" data-id="' + item.id + '" type="number" min="0" value="' + item.stock + '"></label><label>Imagen <input class="image-input" data-id="' + item.id + '" type="text" placeholder="ruta/imagen.jpg" value="' + escapeHtml(item.image || '') + '"></label></div>'; }).join('');
         productsNode.querySelectorAll('.stock-input, .price-input, .image-input').forEach(function (input) { input.addEventListener('change', function () { var list = products(); var item = list.find(function (entry) { return entry.id === input.dataset.id; }); if (input.classList.contains('stock-input')) item.stock = Math.max(0, Number(input.value) || 0); if (input.classList.contains('price-input')) item.price = Math.max(0, Number(input.value) || 0); if (input.classList.contains('image-input')) item.image = input.value.trim(); write(STORAGE.products, list); renderProducts(); }); });
         var orders = read(STORAGE.orders, []);
-        ordersNode.innerHTML = orders.length ? orders.map(function (order) { return '<div class="order-row"><strong>' + escapeHtml(order.name) + '</strong><span>' + escapeHtml(order.deliveryDate) + ' · ' + escapeHtml(order.deliveryMethod) + '</span><span>' + money(order.total) + ' · ' + escapeHtml(order.payment) + '</span></div>'; }).join('') : '<p>Aún no hay pedidos.</p>';
+        ordersNode.innerHTML = orders.length ? orders.map(function (order) { return '<div class="order-row"><strong>' + escapeHtml(order.id) + ' · ' + escapeHtml(order.name) + '</strong><span>' + escapeHtml(order.phone) + ' · ' + escapeHtml(order.email) + '</span><span>' + escapeHtml(order.address) + '</span><span>' + escapeHtml(order.deliveryZone === 'huamachuco' ? 'Huamachuco · gratis' : 'Otro destino · courier: ' + (order.courier || 'por definir')) + '</span><span>' + escapeHtml(order.deliveryDate) + ' · ' + escapeHtml(order.deliveryMethod) + '</span><span>' + money(order.total) + ' · ' + escapeHtml(order.payment) + '</span></div>'; }).join('') : '<p>Aún no hay pedidos.</p>';
     }
     function setup() {
         products(); updateCartCount(); renderProducts(); renderCart();
@@ -117,10 +117,19 @@
         var form = document.getElementById('checkout-form');
         var paymentSelect = form && form.querySelector('[name="payment"]');
         var paymentHelp = document.getElementById('payment-help');
+        var deliveryZone = document.getElementById('delivery-zone');
+        var courierField = document.getElementById('courier-field');
+        if (deliveryZone && courierField) deliveryZone.addEventListener('change', function () {
+            var isOther = deliveryZone.value === 'otro';
+            courierField.hidden = !isOther;
+            courierField.querySelector('input').required = isOther;
+            var method = form.querySelector('[name="deliveryMethod"]');
+            if (isOther) method.value = 'Envío por courier';
+        });
         if (paymentSelect && paymentHelp) paymentSelect.addEventListener('change', function () {
             var messages = {
                 'Yape / Plin (coordinar confirmación)': 'Yape / Plin: al confirmar el pedido aparecerá el QR y podrás adjuntar tu comprobante.',
-                'Transferencia bancaria': 'Transferencia: te enviaremos los datos bancarios por WhatsApp para que verifiques el destinatario antes de transferir.',
+                'Transferencia bancaria': 'Transferencia: solicita nuestros datos bancarios por WhatsApp antes de pagar. Verifica que el titular y la cuenta coincidan con BENLYNSOLUTIONS.',
                 'Pago contra entrega': 'Contra entrega: coordinaremos disponibilidad, fecha y monto del envío antes de despachar.'
             };
             paymentHelp.textContent = messages[paymentSelect.value];
@@ -148,7 +157,9 @@
             data.id = orderId(); data.total = total; data.items = lines; data.createdAt = new Date().toISOString();
             var orders = read(STORAGE.orders, []); orders.unshift(data); write(STORAGE.orders, orders); write(STORAGE.products, all); write(STORAGE.cart, []); form.reset(); renderProducts(); renderCart(); updateCartCount(); document.getElementById('checkout-message').textContent = 'Pedido ' + data.id + ' recibido. Te contactaremos para confirmar el pago y la entrega.';
             var paymentPanel = document.getElementById('yape-payment');
+            var transferPanel = document.getElementById('transfer-payment');
             if (paymentPanel) paymentPanel.hidden = data.payment.indexOf('Yape') === -1;
+            if (transferPanel) transferPanel.hidden = data.payment !== 'Transferencia bancaria';
             form.dataset.orderId = data.id;
             form.dataset.orderTotal = money(data.total);
             renderAdmin();

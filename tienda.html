@@ -50,8 +50,17 @@
                     <legend>2. Entrega</legend>
                     <label>Dirección de entrega <textarea name="address" required rows="2" autocomplete="street-address"></textarea></label>
                     <label>Fecha preferida <input name="deliveryDate" required type="date"></label>
+                    <label>Destino
+                        <select id="delivery-zone" name="deliveryZone">
+                            <option value="huamachuco">Huamachuco (entrega gratis)</option>
+                            <option value="otro">Otro destino (envío por courier)</option>
+                        </select>
+                    </label>
+                    <label id="courier-field" hidden>Courier de preferencia
+                        <input name="courier" placeholder="Ej. Shalom, Olva, Marvisur">
+                    </label>
                     <label>Modalidad
-                        <select name="deliveryMethod"><option>Recojo en tienda</option><option>Envío a domicilio</option></select>
+                        <select name="deliveryMethod"><option>Recojo en tienda</option><option>Entrega local</option><option>Envío por courier</option></select>
                     </label>
                 </fieldset>
                 <fieldset class="checkout-section">
@@ -63,6 +72,11 @@
                 </fieldset>
                 <button class="button" type="submit">Enviar pedido</button>
                 <p id="checkout-message" class="form-message" role="status"></p>
+                <div id="transfer-payment" class="payment-panel" hidden>
+                    <h3>Transferencia bancaria</h3>
+                    <p>Solicita los datos bancarios por WhatsApp y verifica el titular antes de realizar la transferencia.</p>
+                    <a class="button button-whatsapp" href="https://wa.me/519854471784?text=Hola%20BENLYNSOLUTIONS%2C%20necesito%20los%20datos%20para%20hacer%20una%20transferencia." target="_blank" rel="noopener">Solicitar datos por WhatsApp</a>
+                </div>
                 <div id="yape-payment" class="payment-panel" hidden>
                     <h3>Paga con Yape</h3>
                     <img class="yape-qr" src="Pago/MiQR.jpeg" alt="Código QR de Yape de BENLYNSOLUTIONS">

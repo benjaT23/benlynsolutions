@@ -76,17 +76,19 @@
         var all = products(), lines = cart();
         node.innerHTML = lines.length ? lines.map(function (line) {
             var item = all.find(function (product) { return product.id === line.id; }); if (!item) return '';
-            return '<div class="cart-line"><div><strong>' + escapeHtml(item.name) + '</strong><small>' + money(item.price) + ' c/u</small></div><div class="quantity-controls"><button type="button" data-action="minus" data-id="' + item.id + '">−</button><span>' + line.quantity + '</span><button type="button" data-action="plus" data-id="' + item.id + '">+</button><button type="button" class="remove" data-action="remove" data-id="' + item.id + '">Eliminar</button></div></div>';
+            var itemImage = item.image ? '<img src="' + escapeHtml(item.image) + '" alt="">': '<span class="cart-image-placeholder">IMG</span>';
+            return '<div class="cart-line"><div class="cart-product">' + itemImage + '<div><strong>' + escapeHtml(item.name) + '</strong><small>' + escapeHtml(item.category) + ' · ' + money(item.price) + ' c/u</small></div></div><div class="cart-line-actions"><div class="quantity-controls"><button type="button" data-action="minus" data-id="' + item.id + '" aria-label="Disminuir cantidad">−</button><span>' + line.quantity + '</span><button type="button" data-action="plus" data-id="' + item.id + '" aria-label="Aumentar cantidad">+</button></div><strong>' + money(item.price * line.quantity) + '</strong><button type="button" class="remove" data-action="remove" data-id="' + item.id + '">Eliminar</button></div></div>';
         }).join('') : '<p>Tu carrito está vacío.</p>';
         var total = lines.reduce(function (sum, line) { var item = all.find(function (product) { return product.id === line.id; }); return sum + (item ? item.price * line.quantity : 0); }, 0);
         var totalNode = document.getElementById('cart-total'); if (totalNode) totalNode.textContent = money(total);
         node.querySelectorAll('[data-action]').forEach(function (button) { button.addEventListener('click', function () {
-            var line = cart().find(function (entry) { return entry.id === button.dataset.id; });
+            var currentCart = cart();
+            var line = currentCart.find(function (entry) { return entry.id === button.dataset.id; });
             if (!line) return;
             if (button.dataset.action === 'remove') line.quantity = 0;
             if (button.dataset.action === 'minus') line.quantity -= 1;
             if (button.dataset.action === 'plus') { var item = all.find(function (product) { return product.id === line.id; }); if (item && line.quantity < item.stock) line.quantity += 1; }
-            setCart(cart());
+            setCart(currentCart);
         }); });
     }
     function renderAdmin() {

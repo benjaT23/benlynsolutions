@@ -102,10 +102,29 @@
     }
     function setup() {
         products(); updateCartCount(); renderProducts(); renderCart();
+        var cartDialog = document.getElementById('cart-dialog');
+        document.querySelectorAll('.cart-link').forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                if (cartDialog) cartDialog.showModal();
+            });
+        });
+        var closeCart = document.getElementById('close-cart');
+        if (closeCart && cartDialog) closeCart.addEventListener('click', function () { cartDialog.close(); });
         var search = document.getElementById('product-search'), filter = document.getElementById('category-filter');
         if (search) search.addEventListener('input', renderProducts);
         if (filter) { Array.from(new Set(products().map(function (item) { return item.category; }))).forEach(function (category) { filter.insertAdjacentHTML('beforeend', '<option value="' + escapeHtml(category) + '">' + escapeHtml(category) + '</option>'); }); filter.addEventListener('change', renderProducts); }
         var form = document.getElementById('checkout-form');
+        var paymentSelect = form && form.querySelector('[name="payment"]');
+        var paymentHelp = document.getElementById('payment-help');
+        if (paymentSelect && paymentHelp) paymentSelect.addEventListener('change', function () {
+            var messages = {
+                'Yape / Plin (coordinar confirmación)': 'Yape / Plin: al confirmar el pedido aparecerá el QR y podrás adjuntar tu comprobante.',
+                'Transferencia bancaria': 'Transferencia: te enviaremos los datos bancarios por WhatsApp para que verifiques el destinatario antes de transferir.',
+                'Pago contra entrega': 'Contra entrega: coordinaremos disponibilidad, fecha y monto del envío antes de despachar.'
+            };
+            paymentHelp.textContent = messages[paymentSelect.value];
+        });
         var continueButton = document.getElementById('continue-checkout');
         var cartMessage = document.getElementById('cart-message');
         if (continueButton && form) continueButton.addEventListener('click', function () {

@@ -26,15 +26,17 @@
             <label>Categoría <select id="category-filter"><option value="all">Todas</option></select></label>
         </section>
         <section id="product-grid" class="product-grid" aria-live="polite"></section>
-        <section id="carrito" class="checkout-layout">
-            <div class="panel">
-                <h2>Tu carrito</h2>
-                <div id="cart-items"></div>
-                <p class="total-line"><strong>Total:</strong> <span id="cart-total">S/ 0.00</span></p>
-                <button id="continue-checkout" class="button checkout-start" type="button" disabled>Continuar compra</button>
-                <p id="cart-message" class="form-message" role="status"></p>
-            </div>
-            <form id="checkout-form" class="panel checkout-form" hidden>
+        <dialog id="cart-dialog" class="cart-dialog">
+            <div class="cart-dialog-heading"><h2>Mi carrito</h2><button id="close-cart" class="dialog-close" type="button" aria-label="Cerrar carrito">×</button></div>
+            <div class="checkout-layout">
+                <div class="panel cart-review-panel">
+                    <p class="checkout-step">Paso 1 de 2 · Revisa tus productos</p>
+                    <div id="cart-items"></div>
+                    <p class="total-line"><strong>Total:</strong> <span id="cart-total">S/ 0.00</span></p>
+                    <button id="continue-checkout" class="button checkout-start" type="button" disabled>Continuar compra</button>
+                    <p id="cart-message" class="form-message" role="status"></p>
+                </div>
+                <form id="checkout-form" class="panel checkout-form" hidden>
                 <div class="checkout-heading"><button id="back-to-cart" class="text-button" type="button">← Volver al carrito</button><span class="checkout-step">Paso 2 de 2</span></div>
                 <h2>Finaliza tu compra</h2>
                 <p class="notice">Este prototipo registra el pedido localmente. Para cobrar en producción se debe conectar una pasarela segura (Yape/Plin, Culqi, Niubiz o similar) desde un backend.</p>
@@ -57,7 +59,7 @@
                     <label>Elige cómo pagar
                         <select name="payment"><option>Yape / Plin (coordinar confirmación)</option><option>Transferencia bancaria</option><option>Pago contra entrega</option></select>
                     </label>
-                    <p class="payment-help">Al elegir Yape, después de enviar el pedido aparecerá nuestro QR y podrás adjuntar tu comprobante.</p>
+                    <div id="payment-help" class="payment-help">Yape / Plin: al confirmar el pedido aparecerá el QR y podrás adjuntar tu comprobante.</div>
                 </fieldset>
                 <button class="button" type="submit">Enviar pedido</button>
                 <p id="checkout-message" class="form-message" role="status"></p>
@@ -71,8 +73,9 @@
                     <button id="send-proof" class="button button-whatsapp" type="button">Enviar comprobante por WhatsApp</button>
                     <p id="proof-message" class="form-message" role="status"></p>
                 </div>
-            </form>
-        </section>
+                </form>
+            </div>
+        </dialog>
         <dialog id="product-dialog" class="product-dialog">
             <button id="close-product-dialog" class="dialog-close" type="button" aria-label="Cerrar detalle">×</button>
             <div id="product-detail"></div>

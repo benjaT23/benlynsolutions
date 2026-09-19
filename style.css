@@ -308,9 +308,24 @@ main {
     box-shadow: 0 8px 20px rgba(0, 0, 0, .16);
     display: block;
     margin: 0 auto 1.5rem;
-    max-height: 180px;
+    max-height: 360px;
     max-width: min(100%, 680px);
     object-fit: cover;
+    width: min(100%, 920px);
+}
+
+.hero {
+    padding: 3rem 2rem 4rem;
+}
+
+.location-badge {
+    background: rgba(0, 229, 255, .1);
+    border: 1px solid rgba(0, 229, 255, .4);
+    border-radius: 999px;
+    color: #bff8ff !important;
+    display: inline-block;
+    font-size: .95rem !important;
+    padding: .55rem 1rem;
 }
 
 header nav {
@@ -419,6 +434,27 @@ header nav a {
 .checkout-layout form {
     display: grid;
     gap: 1rem;
+}
+
+.checkout-section {
+    border: 1px solid rgba(0, 229, 255, .3);
+    border-radius: 10px;
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 1rem;
+}
+
+.checkout-section legend {
+    color: var(--neon-blue, #00e5ff);
+    font-weight: 700;
+    padding: 0 .4rem;
+}
+
+.payment-help {
+    color: #b9ccda;
+    font-size: .9rem;
+    margin: 0;
 }
 
 .notice {
@@ -612,7 +648,7 @@ header {
 @media (max-width: 600px) {
     header nav { width: 100%; }
     header nav a { font-size: .88rem; }
-    .hero { padding: 2rem 1rem; }
+    .hero { padding: 1.5rem .75rem 2.5rem; }
     .hero-content h1 { font-size: 2rem; }
     .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
     .product-card { padding: .8rem; }
@@ -625,6 +661,7 @@ header {
     .checkout-layout { gap: 1rem; }
     .panel { padding: 1rem; }
     .yape-qr { max-width: 220px; }
+    .company-logo-banner { max-height: 260px; }
     .product-dialog { padding: 1.4rem 1rem; }
     .product-detail-grid { grid-template-columns: 1fr; gap: 1rem; }
     .detail-main-image { height: 230px; }

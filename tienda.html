@@ -33,19 +33,29 @@
                 <p class="total-line"><strong>Total:</strong> <span id="cart-total">S/ 0.00</span></p>
             </div>
             <form id="checkout-form" class="panel">
-                <h2>Datos de compra y entrega</h2>
+                <h2>Completa tu pedido</h2>
                 <p class="notice">Este prototipo registra el pedido localmente. Para cobrar en producción se debe conectar una pasarela segura (Yape/Plin, Culqi, Niubiz o similar) desde un backend.</p>
-                <label>Nombre completo <input name="name" required autocomplete="name"></label>
-                <label>WhatsApp / teléfono <input name="phone" required type="tel" autocomplete="tel"></label>
-                <label>Correo <input name="email" required type="email" autocomplete="email"></label>
-                <label>Dirección de entrega <textarea name="address" required rows="2"></textarea></label>
-                <label>Fecha preferida <input name="deliveryDate" required type="date"></label>
-                <label>Modalidad
-                    <select name="deliveryMethod"><option>Recojo en tienda</option><option>Envío a domicilio</option></select>
-                </label>
-                <label>Método de pago
-                    <select name="payment"><option>Yape / Plin (coordinar confirmación)</option><option>Transferencia bancaria</option><option>Pago contra entrega</option></select>
-                </label>
+                <fieldset class="checkout-section">
+                    <legend>1. Tus datos</legend>
+                    <label>Nombre completo <input name="name" required autocomplete="name"></label>
+                    <label>WhatsApp / teléfono <input name="phone" required type="tel" autocomplete="tel"></label>
+                    <label>Correo <input name="email" required type="email" autocomplete="email"></label>
+                </fieldset>
+                <fieldset class="checkout-section">
+                    <legend>2. Entrega</legend>
+                    <label>Dirección de entrega <textarea name="address" required rows="2" autocomplete="street-address"></textarea></label>
+                    <label>Fecha preferida <input name="deliveryDate" required type="date"></label>
+                    <label>Modalidad
+                        <select name="deliveryMethod"><option>Recojo en tienda</option><option>Envío a domicilio</option></select>
+                    </label>
+                </fieldset>
+                <fieldset class="checkout-section">
+                    <legend>3. Método de pago</legend>
+                    <label>Elige cómo pagar
+                        <select name="payment"><option>Yape / Plin (coordinar confirmación)</option><option>Transferencia bancaria</option><option>Pago contra entrega</option></select>
+                    </label>
+                    <p class="payment-help">Al elegir Yape, después de enviar el pedido aparecerá nuestro QR y podrás adjuntar tu comprobante.</p>
+                </fieldset>
                 <button class="button" type="submit">Enviar pedido</button>
                 <p id="checkout-message" class="form-message" role="status"></p>
                 <div id="yape-payment" class="payment-panel" hidden>

@@ -16,11 +16,20 @@
             <p id="admin-login-message" class="form-message" role="alert"></p>
         </form>
         <section id="admin-content" class="panel" hidden>
-            <div class="panel-heading"><h2>Inventario y pedidos</h2><button id="admin-logout" class="button button-secondary" type="button">Cerrar sesión</button></div>
-            <p class="notice">Para una imagen local, coloca el archivo dentro del proyecto y escribe su ruta, por ejemplo: <code>imgCargadores/cargador-20w.jpg</code>.</p>
-            <div id="admin-products"></div>
-            <h3>Pedidos recibidos</h3>
-            <div id="admin-orders"></div>
+            <div class="panel-heading"><h2>Panel de control</h2><button id="admin-logout" class="button button-secondary" type="button">Cerrar sesión</button></div>
+            <nav class="admin-tabs" aria-label="Secciones administrativas">
+                <button class="admin-tab active" type="button" data-admin-section="orders-section">Pedidos</button>
+                <button class="admin-tab" type="button" data-admin-section="inventory-section">Inventario</button>
+            </nav>
+            <section id="orders-section" class="admin-section">
+                <h3>Pedidos recibidos</h3>
+                <div id="admin-orders"></div>
+            </section>
+            <section id="inventory-section" class="admin-section" hidden>
+                <h3>Inventario y catálogo</h3>
+                <p class="notice">Para una imagen local, coloca el archivo dentro del proyecto y escribe su ruta, por ejemplo: <code>imgCargadores/cargador-20w.jpg</code>.</p>
+                <div id="admin-products"></div>
+            </section>
         </section>
     </main>
     <script src="script.js"></script>

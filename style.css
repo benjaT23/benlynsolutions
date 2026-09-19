@@ -663,6 +663,34 @@ header nav a {
     box-shadow: 0 0 14px rgba(0, 208, 132, .55);
 }
 
+.admin-tabs {
+    border-bottom: 1px solid rgba(0, 229, 255, .25);
+    display: flex;
+    gap: .5rem;
+    margin: 1rem 0 1.25rem;
+}
+
+.admin-tab {
+    background: transparent;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    color: #a8c1d4;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    padding: .75rem 1rem;
+}
+
+.admin-tab.active {
+    border-bottom-color: var(--neon-pink, #ff2bd6);
+    color: #fff;
+    text-shadow: 0 0 8px var(--neon-blue, #00e5ff);
+}
+
+.admin-section[hidden] {
+    display: none;
+}
+
 @media (max-width: 768px) {
     header {
         align-items: flex-start;

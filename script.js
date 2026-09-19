@@ -182,6 +182,12 @@
             });
             document.getElementById('admin-logout').addEventListener('click', function () { sessionStorage.removeItem('benlyn-admin-auth'); content.hidden = true; login.hidden = false; login.reset(); });
         }
+        document.querySelectorAll('.admin-tab').forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                document.querySelectorAll('.admin-tab').forEach(function (item) { item.classList.toggle('active', item === tab); });
+                document.querySelectorAll('.admin-section').forEach(function (section) { section.hidden = section.id !== tab.dataset.adminSection; });
+            });
+        });
         var proofButton = document.getElementById('send-proof');
         if (proofButton) proofButton.addEventListener('click', function () {
             var fileInput = document.getElementById('payment-proof'), file = fileInput.files[0], message = document.getElementById('proof-message');

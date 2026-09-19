@@ -4,16 +4,16 @@
     var STORAGE = { products: 'apex-products-v2', cart: 'apex-cart-v1', orders: 'apex-orders-v1' };
     var WHATSAPP = '519854471784';
     var defaultProducts = [
-        ['audifonos-hoco-w48', 'Audífonos Bluetooth HOCO W48 RGB', 'Audífonos', 59.90, 'imgAudifonos/AUDIFONO-VINCHA-HOCO-W48-RGB-NEGRO-1.png'],
-        ['cargador-usbc-20w', 'Cargador rápido USB-C 20W', 'Cargadores', 39.90, ''],
-        ['cargador-auto', 'Cargador para auto doble USB', 'Cargadores', 29.90, ''],
-        ['mouse-inalambrico', 'Mouse inalámbrico ergonómico', 'Mouse', 34.90, ''],
-        ['teclado-mecanico', 'Teclado mecánico RGB', 'Teclados', 129.90, ''],
-        ['camara-seguridad', 'Cámara de seguridad Wi-Fi', 'Cámaras', 149.90, ''],
-        ['power-bank', 'Power Bank 10,000 mAh', 'Cargadores', 69.90, ''],
-        ['audifonos-tws', 'Audífonos TWS compactos', 'Audífonos', 49.90, '']
+        ['audifonos-hoco-w48', 'Audífonos Bluetooth HOCO W48 RGB', 'Audífonos', 59.90, 'imgAudifonos/AUDIFONO-VINCHA-HOCO-W48-RGB-NEGRO-1.png', 'Audífonos inalámbricos con Bluetooth 5.3, iluminación RGB, micrófono y hasta 8 horas de reproducción con luces encendidas.', ['imgAudifonos/AUDIFONO-VINCHA-HOCO-W48-RGB-NEGRO-1.png', 'imgAudifonos/AUDIFONO-VINCHA-HOCO-W48-RGB-NEGRO2.png', 'imgAudifonos/AUDIFONO-VINCHA-HOCO-W48-RGB-NEGRO-3.png', 'imgAudifonos/AUDIFONO-VINCHA-HOCO-W48-RGB-NEGRO-4.png']],
+        ['cargador-usbc-20w', 'Cargador rápido USB-C 20W', 'Cargadores', 39.90, '', 'Cargador compacto para carga rápida de dispositivos compatibles. Imagen pendiente de actualización.', []],
+        ['cargador-auto', 'Cargador para auto doble USB', 'Cargadores', 29.90, '', 'Cargador vehicular con dos puertos USB para mantener tus dispositivos cargados durante el viaje.', []],
+        ['mouse-inalambrico', 'Mouse inalámbrico ergonómico', 'Mouse', 34.90, '', 'Mouse inalámbrico cómodo para trabajo, estudio y uso diario.', []],
+        ['teclado-mecanico', 'Teclado mecánico RGB', 'Teclados', 129.90, '', 'Teclado mecánico con iluminación RGB para productividad y gaming.', []],
+        ['camara-seguridad', 'Cámara de seguridad Wi-Fi', 'Cámaras', 149.90, '', 'Cámara Wi-Fi para monitoreo del hogar desde dispositivos compatibles.', []],
+        ['power-bank', 'Power Bank 10,000 mAh', 'Cargadores', 69.90, '', 'Batería portátil de 10,000 mAh para cargar tus dispositivos donde estés.', []],
+        ['audifonos-tws', 'Audífonos TWS compactos', 'Audífonos', 49.90, '', 'Audífonos completamente inalámbricos, compactos y fáciles de transportar.', []]
     ].map(function (item) {
-        return { id: item[0], name: item[1], category: item[2], price: item[3], stock: 12, image: item[4] };
+        return { id: item[0], name: item[1], category: item[2], price: item[3], stock: 12, image: item[4], description: item[5], images: item[6] };
     });
 
     function read(key, fallback) {
@@ -32,7 +32,10 @@
     function products() {
         var saved = read(STORAGE.products, null);
         if (!saved || !Array.isArray(saved) || !saved.length) { write(STORAGE.products, defaultProducts); return defaultProducts.slice(); }
-        return saved;
+        return saved.map(function (item) {
+            var base = defaultProducts.find(function (product) { return product.id === item.id; }) || {};
+            return Object.assign({}, base, item, { description: item.description || base.description || 'Descripción pendiente.', images: item.images && item.images.length ? item.images : (base.images || (item.image ? [item.image] : [])) });
+        });
     }
     function setCart(cart) { write(STORAGE.cart, cart.filter(function (line) { return line.quantity > 0; })); renderCart(); updateCartCount(); }
     function cart() { return read(STORAGE.cart, []); }
@@ -53,9 +56,20 @@
         grid.innerHTML = visible.length ? visible.map(function (item) {
             var disabled = item.stock < 1 ? ' disabled' : '';
             var image = item.image ? '<img src="' + escapeHtml(item.image) + '" alt="' + escapeHtml(item.name) + '">' : '<div class="product-image-placeholder" role="img" aria-label="Imagen pendiente de ' + escapeHtml(item.name) + '">Imagen del producto pendiente</div>';
-            return '<article class="product-card">' + image + '<span class="product-category">' + escapeHtml(item.category) + '</span><h3>' + escapeHtml(item.name) + '</h3><p class="price">' + money(item.price) + '</p><p class="stock">' + (item.stock ? item.stock + ' disponibles' : 'Agotado') + '</p><button class="button add-product" data-id="' + escapeHtml(item.id) + '"' + disabled + '>Añadir al carrito</button></article>';
+            return '<article class="product-card">' + image + '<span class="product-category">' + escapeHtml(item.category) + '</span><h3>' + escapeHtml(item.name) + '</h3><p class="price">' + money(item.price) + '</p><p class="stock">' + (item.stock ? item.stock + ' disponibles' : 'Agotado') + '</p><div class="product-card-actions"><button class="button button-secondary view-product" data-id="' + escapeHtml(item.id) + '" type="button">Ver detalles</button><button class="button add-product" data-id="' + escapeHtml(item.id) + '"' + disabled + '>Añadir al carrito</button></div></article>';
         }).join('') : '<p>No encontramos productos con esos filtros.</p>';
         grid.querySelectorAll('.add-product').forEach(function (button) { button.addEventListener('click', function () { addToCart(button.dataset.id); }); });
+        grid.querySelectorAll('.view-product').forEach(function (button) { button.addEventListener('click', function () { showProduct(button.dataset.id); }); });
+    }
+    function showProduct(id) {
+        var item = products().find(function (product) { return product.id === id; }), dialog = document.getElementById('product-dialog'), detail = document.getElementById('product-detail');
+        if (!item || !dialog || !detail) return;
+        var gallery = item.images && item.images.length ? item.images : (item.image ? [item.image] : []);
+        var main = gallery[0] ? '<img id="detail-main-image" src="' + escapeHtml(gallery[0]) + '" alt="' + escapeHtml(item.name) + '">' : '<div class="product-image-placeholder">Imagen pendiente</div>';
+        detail.innerHTML = '<div class="product-detail-grid"><div><div class="detail-main-image">' + main + '</div><div class="detail-thumbnails">' + gallery.map(function (src) { return '<button type="button" class="detail-thumbnail" data-src="' + escapeHtml(src) + '"><img src="' + escapeHtml(src) + '" alt="Vista de ' + escapeHtml(item.name) + '"></button>'; }).join('') + '</div></div><div class="product-detail-copy"><span class="product-category">' + escapeHtml(item.category) + '</span><h2>' + escapeHtml(item.name) + '</h2><p class="price">' + money(item.price) + '</p><p>' + escapeHtml(item.description) + '</p><p class="stock">' + item.stock + ' disponibles</p><button class="button detail-add" type="button">Añadir al carrito</button></div></div>';
+        detail.querySelector('.detail-add').addEventListener('click', function () { addToCart(item.id); dialog.close(); });
+        detail.querySelectorAll('.detail-thumbnail').forEach(function (thumb) { thumb.addEventListener('click', function () { document.getElementById('detail-main-image').src = thumb.dataset.src; }); });
+        dialog.showModal();
     }
     function renderCart() {
         var node = document.getElementById('cart-items'); if (!node) return;
@@ -124,6 +138,8 @@
             window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(text + ' Adjuntaré la captura en este chat.'), '_blank', 'noopener');
             message.textContent = 'WhatsApp se abrió. Adjunta la captura en el chat y envíala.';
         });
+        var dialog = document.getElementById('product-dialog'), closeDialog = document.getElementById('close-product-dialog');
+        if (dialog && closeDialog) closeDialog.addEventListener('click', function () { dialog.close(); });
     }
     document.addEventListener('DOMContentLoaded', setup);
 }());

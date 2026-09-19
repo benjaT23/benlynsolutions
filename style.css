@@ -191,6 +191,95 @@ main {
     transform: scale(1.03); 
 }
 
+.product-card-actions {
+    display: grid;
+    gap: .5rem;
+}
+
+.product-dialog {
+    background: #0b1024;
+    border: 1px solid var(--neon-blue, #00e5ff);
+    border-radius: 14px;
+    box-shadow: 0 0 35px rgba(0, 229, 255, .35);
+    color: #e9f7ff;
+    max-width: 900px;
+    padding: 2rem;
+    width: calc(100% - 2rem);
+}
+
+.product-dialog::backdrop {
+    background: rgba(2, 4, 15, .82);
+    backdrop-filter: blur(4px);
+}
+
+.dialog-close {
+    background: transparent;
+    border: 0;
+    color: #fff;
+    cursor: pointer;
+    font-size: 2rem;
+    line-height: 1;
+    position: absolute;
+    right: 1rem;
+    top: .7rem;
+}
+
+.product-detail-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.detail-main-image {
+    align-items: center;
+    background: #fff;
+    border-radius: 10px;
+    display: flex;
+    height: 340px;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.detail-main-image img {
+    height: 100%;
+    object-fit: contain;
+    width: 100%;
+}
+
+.detail-thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+    margin-top: .8rem;
+}
+
+.detail-thumbnail {
+    background: #fff;
+    border: 1px solid rgba(0, 229, 255, .5);
+    border-radius: 6px;
+    cursor: pointer;
+    height: 64px;
+    overflow: hidden;
+    padding: 0;
+    width: 64px;
+}
+
+.detail-thumbnail img {
+    height: 100%;
+    object-fit: contain;
+    width: 100%;
+}
+
+.product-detail-copy {
+    padding-top: 1rem;
+}
+
+.product-detail-copy h2 {
+    color: #fff;
+    font-size: clamp(1.5rem, 3vw, 2.3rem);
+    text-shadow: 0 0 12px var(--neon-blue, #00e5ff);
+}
+
 /* Tienda, carrito y administración */
 .eyebrow {
     color: #007bff;
@@ -536,6 +625,10 @@ header {
     .checkout-layout { gap: 1rem; }
     .panel { padding: 1rem; }
     .yape-qr { max-width: 220px; }
+    .product-dialog { padding: 1.4rem 1rem; }
+    .product-detail-grid { grid-template-columns: 1fr; gap: 1rem; }
+    .detail-main-image { height: 230px; }
+    .product-detail-copy { padding-top: 0; }
 }
 
 .admin-row {

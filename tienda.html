@@ -53,13 +53,17 @@
                     <img class="yape-qr" src="Pago/MiQR.jpeg" alt="Código QR de Yape de BENLYNSOLUTIONS">
                     <p>Escanea el QR, realiza el pago y adjunta la captura para enviarla por WhatsApp.</p>
                     <label>Captura del pago
-                        <input id="payment-proof" type="file" accept="image/*" capture="environment">
+                        <input id="payment-proof" type="file" accept="image/*">
                     </label>
                     <button id="send-proof" class="button button-whatsapp" type="button">Enviar comprobante por WhatsApp</button>
                     <p id="proof-message" class="form-message" role="status"></p>
                 </div>
             </form>
         </section>
+        <dialog id="product-dialog" class="product-dialog">
+            <button id="close-product-dialog" class="dialog-close" type="button" aria-label="Cerrar detalle">×</button>
+            <div id="product-detail"></div>
+        </dialog>
     </main>
     <footer><p>&copy; 2026 BENLYNSOLUTIONS. Todos los derechos reservados.</p></footer>
     <script src="script.js"></script>

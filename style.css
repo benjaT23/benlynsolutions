@@ -436,6 +436,40 @@ header nav a {
     gap: 1rem;
 }
 
+.checkout-form[hidden] {
+    display: none;
+}
+
+.checkout-start {
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.checkout-heading {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.checkout-step {
+    color: var(--neon-blue, #00e5ff);
+    font-size: .85rem;
+    font-weight: 700;
+}
+
+.text-button {
+    background: transparent;
+    border: 0;
+    color: var(--neon-blue, #00e5ff);
+    cursor: pointer;
+    font: inherit;
+    padding: .2rem 0;
+}
+
+.text-button:hover {
+    color: var(--neon-pink, #ff2bd6);
+}
+
 .checkout-section {
     border: 1px solid rgba(0, 229, 255, .3);
     border-radius: 10px;

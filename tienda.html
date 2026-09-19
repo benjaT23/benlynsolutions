@@ -31,9 +31,12 @@
                 <h2>Tu carrito</h2>
                 <div id="cart-items"></div>
                 <p class="total-line"><strong>Total:</strong> <span id="cart-total">S/ 0.00</span></p>
+                <button id="continue-checkout" class="button checkout-start" type="button" disabled>Continuar compra</button>
+                <p id="cart-message" class="form-message" role="status"></p>
             </div>
-            <form id="checkout-form" class="panel">
-                <h2>Completa tu pedido</h2>
+            <form id="checkout-form" class="panel checkout-form" hidden>
+                <div class="checkout-heading"><button id="back-to-cart" class="text-button" type="button">← Volver al carrito</button><span class="checkout-step">Paso 2 de 2</span></div>
+                <h2>Finaliza tu compra</h2>
                 <p class="notice">Este prototipo registra el pedido localmente. Para cobrar en producción se debe conectar una pasarela segura (Yape/Plin, Culqi, Niubiz o similar) desde un backend.</p>
                 <fieldset class="checkout-section">
                     <legend>1. Tus datos</legend>

@@ -81,6 +81,8 @@
         }).join('') : '<p>Tu carrito está vacío.</p>';
         var total = lines.reduce(function (sum, line) { var item = all.find(function (product) { return product.id === line.id; }); return sum + (item ? item.price * line.quantity : 0); }, 0);
         var totalNode = document.getElementById('cart-total'); if (totalNode) totalNode.textContent = money(total);
+        var continueButton = document.getElementById('continue-checkout');
+        if (continueButton) continueButton.disabled = !lines.length;
         node.querySelectorAll('[data-action]').forEach(function (button) { button.addEventListener('click', function () {
             var currentCart = cart();
             var line = currentCart.find(function (entry) { return entry.id === button.dataset.id; });
@@ -104,6 +106,21 @@
         if (search) search.addEventListener('input', renderProducts);
         if (filter) { Array.from(new Set(products().map(function (item) { return item.category; }))).forEach(function (category) { filter.insertAdjacentHTML('beforeend', '<option value="' + escapeHtml(category) + '">' + escapeHtml(category) + '</option>'); }); filter.addEventListener('change', renderProducts); }
         var form = document.getElementById('checkout-form');
+        var continueButton = document.getElementById('continue-checkout');
+        var cartMessage = document.getElementById('cart-message');
+        if (continueButton && form) continueButton.addEventListener('click', function () {
+            if (!cart().length) { cartMessage.textContent = 'Añade un producto para continuar.'; return; }
+            form.hidden = false;
+            continueButton.closest('.panel').classList.add('cart-review-complete');
+            form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        var backToCart = document.getElementById('back-to-cart');
+        if (backToCart && form) backToCart.addEventListener('click', function () {
+            form.hidden = true;
+            var cartPanel = document.getElementById('cart-items').closest('.panel');
+            cartPanel.classList.remove('cart-review-complete');
+            cartPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
         if (form) form.addEventListener('submit', function (event) {
             event.preventDefault(); var lines = cart(), all = products();
             if (!lines.length) { document.getElementById('checkout-message').textContent = 'Añade al menos un producto antes de enviar el pedido.'; return; }

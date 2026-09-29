@@ -125,28 +125,35 @@
             return '<tr><td>' + escapeHtml(sale.receiptNumber) + '</td><td>' + escapeHtml(new Date(sale.soldAt).toLocaleString('es-PE')) + '</td><td>' + escapeHtml(sale.name) + '</td><td>' + itemNames + '</td><td>' + money(sale.saleTotal) + '</td><td>' + costText + '</td><td>' + profitText + '</td></tr>';
         }).join('') : '<tr><td colspan="7">No hay ventas registradas en este período.</td></tr>';
     }
-    function printReceipt(order) {
-        var receipt = window.open('', '_blank');
+    function printReceipt(order, receipt) {
+        receipt = receipt || window.open('', '_blank');
         if (!receipt) return false;
         var rows = (order.saleItems || []).map(function (item) {
             return '<tr><td>' + escapeHtml(item.name) + '</td><td>' + Number(item.quantity) + '</td><td>' + money(item.unitPrice) + '</td><td>' + money(item.unitPrice * item.quantity) + '</td></tr>';
         }).join('');
         var issuedAt = new Date(order.soldAt).toLocaleString('es-PE');
+        receipt.document.open();
         receipt.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Comprobante interno ' + escapeHtml(order.receiptNumber) + '</title><style>body{font:15px Arial,sans-serif;color:#111;margin:2rem auto;max-width:760px;padding:0 1rem}h1,h2{text-align:center}p{margin:.4rem 0}table{border-collapse:collapse;margin:1.5rem 0;width:100%}th,td{border:1px solid #999;padding:.55rem;text-align:left}th{background:#eee}.total{text-align:right;font-size:1.2rem;font-weight:bold}.notice{border:2px solid #a00;color:#a00;font-weight:bold;margin-top:2rem;padding:1rem;text-align:center}.print{display:block;margin:1rem auto;padding:.7rem 1.5rem}@media print{.print{display:none}body{margin:0 auto}}</style></head><body><h1>BENLYNSOLUTIONS</h1><h2>Comprobante interno de venta</h2><p><strong>Número interno:</strong> ' + escapeHtml(order.receiptNumber) + '</p><p><strong>Fecha:</strong> ' + escapeHtml(issuedAt) + '</p><p><strong>Pedido:</strong> ' + escapeHtml(order.id) + '</p><p><strong>Cliente:</strong> ' + escapeHtml(order.name) + '</p><p><strong>Teléfono:</strong> ' + escapeHtml(order.phone) + '</p><table><thead><tr><th>Producto</th><th>Cant.</th><th>Precio unit.</th><th>Subtotal</th></tr></thead><tbody>' + rows + '</tbody></table><p class="total">Total: ' + money(order.saleTotal) + '</p><p class="notice">DOCUMENTO INTERNO. NO ES UNA BOLETA ELECTRÓNICA NI ES VÁLIDO COMO COMPROBANTE TRIBUTARIO SUNAT.</p><button class="print" onclick="window.print()">Imprimir / Guardar como PDF</button></body></html>');
         receipt.document.close();
+        receipt.focus();
         return true;
     }
-    function registerSale(orderIdValue) {
+    function registerSale(orderIdValue, receiptWindow) {
         var orders = read(STORAGE.orders, []), order = orders.find(function (item) { return item.id === orderIdValue; });
-        if (!order) return;
+        if (!order) {
+            if (receiptWindow) receiptWindow.close();
+            document.getElementById('admin-message').textContent = 'No se encontró el pedido. Actualiza la página y vuelve a intentarlo.';
+            return;
+        }
         if (order.isSale) {
-            if (!printReceipt(order)) document.getElementById('admin-message').textContent = 'El comprobante ya existe. Permite las ventanas emergentes para imprimirlo.';
+            if (!printReceipt(order, receiptWindow)) document.getElementById('admin-message').textContent = 'El comprobante ya existe. Permite las ventanas emergentes para imprimirlo.';
             return;
         }
         var inventory = products(), saleItems = [];
         for (var index = 0; index < (order.items || []).length; index += 1) {
             var line = order.items[index], product = inventory.find(function (item) { return item.id === line.id; });
             if (!product) {
+                if (receiptWindow) receiptWindow.close();
                 document.getElementById('admin-message').textContent = 'No se puede registrar la venta: falta un producto del pedido en el inventario.';
                 return;
             }
@@ -160,11 +167,13 @@
             });
         }
         if (!saleItems.length || saleItems.some(function (item) { return !Number.isFinite(item.quantity) || item.quantity < 1 || !Number.isFinite(item.unitPrice) || item.unitPrice < 0; })) {
+            if (receiptWindow) receiptWindow.close();
             document.getElementById('admin-message').textContent = 'No se puede registrar la venta: revisa las cantidades y precios del pedido.';
             return;
         }
         var saleTotal = saleItems.reduce(function (sum, item) { return sum + item.quantity * item.unitPrice; }, 0);
         if (Number.isFinite(Number(order.total)) && Math.round(saleTotal * 100) !== Math.round(Number(order.total) * 100)) {
+            if (receiptWindow) receiptWindow.close();
             document.getElementById('admin-message').textContent = 'No se registró la venta: el precio actual no coincide con el total original del pedido. Revisa el precio acordado antes de emitir el comprobante.';
             return;
         }
@@ -175,10 +184,16 @@
         order.soldAt = new Date().toISOString();
         order.receiptNumber = 'INT-' + order.soldAt.replace(/\D/g, '').slice(0, 14) + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
         order.isSale = true;
-        write(STORAGE.orders, orders);
+        try {
+            write(STORAGE.orders, orders);
+        } catch (error) {
+            if (receiptWindow) receiptWindow.close();
+            document.getElementById('admin-message').textContent = 'No se pudo guardar la venta en este navegador. Comprueba que tenga espacio disponible y que permita el almacenamiento del sitio.';
+            return;
+        }
         renderAdmin();
         renderSalesReport();
-        if (!printReceipt(order)) document.getElementById('admin-message').textContent = 'Venta registrada. Permite las ventanas emergentes del navegador y pulsa "Imprimir comprobante interno".' + (order.saleCostComplete ? '' : ' El costo pendiente se puede completar en Inventario para calcular la ganancia.');
+        if (!printReceipt(order, receiptWindow)) document.getElementById('admin-message').textContent = 'Venta registrada. Permite las ventanas emergentes del navegador y pulsa "Imprimir comprobante interno".' + (order.saleCostComplete ? '' : ' El costo pendiente se puede completar en Inventario para calcular la ganancia.');
         else document.getElementById('admin-message').textContent = 'Venta registrada y comprobante interno generado.' + (order.saleCostComplete ? '' : ' El costo queda pendiente; complétalo en Inventario para calcular la ganancia.');
     }
     function exportSalesReport() {
@@ -229,10 +244,11 @@
         }).join('') : '<p>Aún no hay pedidos.</p>';
         ordersNode.querySelectorAll('[data-action="register-sale"], [data-action="print-receipt"]').forEach(function (button) {
             button.addEventListener('click', function () {
-                if (button.dataset.action === 'register-sale') registerSale(button.dataset.id);
+                var receiptWindow = window.open('', '_blank');
+                if (button.dataset.action === 'register-sale') registerSale(button.dataset.id, receiptWindow);
                 else {
                     var sale = read(STORAGE.orders, []).find(function (order) { return order.id === button.dataset.id; });
-                    if (sale && !printReceipt(sale)) document.getElementById('admin-message').textContent = 'Permite las ventanas emergentes del navegador para imprimir el comprobante.';
+                    if (sale && !printReceipt(sale, receiptWindow)) document.getElementById('admin-message').textContent = 'Permite las ventanas emergentes del navegador para imprimir el comprobante.';
                 }
             });
         });

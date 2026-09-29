@@ -104,6 +104,17 @@
     function saleHasCompleteCost(sale) {
         return sale.saleCostComplete === true || (typeof sale.saleCostComplete === 'undefined' && typeof sale.saleCostTotal === 'number' && Number.isFinite(sale.saleCostTotal));
     }
+    function localDateKey(value) {
+        var date = new Date(value);
+        if (Number.isNaN(date.getTime())) return '';
+        return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+    }
+    function orderDateKey(order) {
+        var key = localDateKey(order.createdAt || order.soldAt);
+        if (key) return key;
+        var match = String(order.id || '').match(/^PED-(\d{4})(\d{2})(\d{2})-/);
+        return match ? match[1] + '-' + match[2] + '-' + match[3] : '';
+    }
     function renderSalesReport() {
         var summary = document.getElementById('sales-summary'), rows = document.getElementById('sales-report-rows');
         if (!summary || !rows) return;
@@ -272,7 +283,7 @@
         window.setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
     }
     function renderAdmin() {
-        var productsNode = document.getElementById('admin-products'), ordersNode = document.getElementById('admin-orders'); if (!productsNode) return;
+        var productsNode = document.getElementById('admin-products'), ordersNode = document.getElementById('admin-orders'), historyNode = document.getElementById('admin-order-history'); if (!productsNode || !ordersNode || !historyNode) return;
         productsNode.innerHTML = products().map(function (item) { return '<div class="admin-row"><strong>' + escapeHtml(item.name) + '</strong><label>Precio de compra (S/) <input class="purchase-cost-input" data-id="' + escapeHtml(item.id) + '" type="number" min="0" step="0.01" value="' + (item.purchaseCost == null ? '' : Number(item.purchaseCost)) + '" required></label><label>Precio de venta (S/) <input class="price-input" data-id="' + escapeHtml(item.id) + '" type="number" min="0" step="0.01" value="' + Number(item.price) + '"></label><label>Stock <input class="stock-input" data-id="' + escapeHtml(item.id) + '" type="number" min="0" step="1" value="' + Number(item.stock) + '"></label><label>Imagen <input class="image-input" data-id="' + escapeHtml(item.id) + '" type="text" placeholder="ruta/imagen.jpg" value="' + escapeHtml(item.image || '') + '"></label></div>'; }).join('');
         productsNode.querySelectorAll('.stock-input, .price-input, .purchase-cost-input, .image-input').forEach(function (input) { input.addEventListener('change', function () {
             var list = products(), item = list.find(function (entry) { return entry.id === input.dataset.id; });
@@ -293,8 +304,11 @@
             write(STORAGE.products, list);
             renderProducts();
         }); });
-        var orders = read(STORAGE.orders, []);
-        ordersNode.innerHTML = orders.length ? orders.map(function (order) {
+        var orders = read(STORAGE.orders, []), today = localDateKey(new Date().toISOString());
+        var todayOrders = orders.filter(function (order) { return order.status !== 'not-sold' && !order.stockReturnedAt && orderDateKey(order) === today; });
+        var historicalOrders = orders.filter(function (order) { return order.status === 'not-sold' || order.stockReturnedAt || orderDateKey(order) !== today; });
+        function renderOrderCards(orderList, emptyMessage) {
+            return orderList.length ? orderList.map(function (order) {
             var items = (order.items || []).map(function (line) { var product = products().find(function (item) { return item.id === line.id; }); return (product ? product.name : line.id) + ' x' + line.quantity; }).join(', ');
             var destination = order.deliveryZone === 'huamachuco' ? 'Huamachuco (entrega local gratis)' : 'Otro destino, courier: ' + (order.courier || 'por definir');
             var message = 'Hola ' + order.name + ', somos BENLYNSOLUTIONS. Confirmamos tu pedido ' + order.id + ': ' + items + '. Total: ' + money(order.total) + '. Entrega: ' + destination + '. Fecha solicitada: ' + order.deliveryDate + '. Método de pago: ' + order.payment + '. Te escribimos para coordinar los detalles. Gracias por comprar con nosotros.';
@@ -305,8 +319,11 @@
             var receiptButton = order.isSale ? '<button class="button button-secondary" type="button" data-action="print-receipt" data-id="' + escapeHtml(order.id) + '">Imprimir comprobante interno</button>' : pending ? '<button class="button" type="button" data-action="register-sale" data-id="' + escapeHtml(order.id) + '">Marcar vendido e imprimir</button>' : '';
             var notSoldButton = pending ? '<button class="button button-secondary" type="button" data-action="mark-not-sold" data-id="' + escapeHtml(order.id) + '">No vendido · devolver stock</button>' : '';
             return '<div class="order-row"><div class="order-main"><strong>' + escapeHtml(order.id) + ' · ' + escapeHtml(order.name) + statusLabel + '</strong><span>' + escapeHtml(order.phone) + ' · ' + escapeHtml(order.email) + '</span><span>' + escapeHtml(order.address) + '</span><span>' + escapeHtml(destination) + '</span><span>' + escapeHtml(order.deliveryDate) + ' · ' + escapeHtml(order.deliveryMethod) + '</span><span>' + money(order.isSale ? order.saleTotal : order.total) + ' · ' + escapeHtml(order.payment) + '</span></div><div class="order-actions">' + receiptButton + notSoldButton + '<a class="whatsapp-order" href="https://wa.me/' + encodeURIComponent(phone) + '?text=' + encodeURIComponent(message) + '" target="_blank" rel="noopener" aria-label="Enviar pedido por WhatsApp">WhatsApp</a></div></div>';
-        }).join('') : '<p>Aún no hay pedidos.</p>';
-        ordersNode.querySelectorAll('[data-action="register-sale"], [data-action="print-receipt"], [data-action="mark-not-sold"]').forEach(function (button) {
+            }).join('') : '<p>' + escapeHtml(emptyMessage) + '</p>';
+        }
+        ordersNode.innerHTML = renderOrderCards(todayOrders, 'Todavía no hay pedidos de hoy.');
+        historyNode.innerHTML = renderOrderCards(historicalOrders, 'Aún no hay pedidos anteriores ni pedidos no vendidos.');
+        document.querySelectorAll('#admin-orders [data-action], #admin-order-history [data-action]').forEach(function (button) {
             button.addEventListener('click', function () {
                 if (button.dataset.action === 'mark-not-sold') {
                     markOrderNotSold(button.dataset.id);

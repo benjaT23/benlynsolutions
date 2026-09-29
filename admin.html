@@ -9,7 +9,7 @@
 <body>
     <header><a class="logo" href="index.html"><img src="MisLogos/LOGO.jpeg" alt="" aria-hidden="true">BENLYNSOLUTIONS</a></header>
     <main class="store-page">
-        <section class="page-header"><p class="eyebrow">Área privada</p><h1>Administración</h1><p>Gestiona inventario, precios, imágenes y pedidos desde este dispositivo.</p></section>
+        <section class="page-header"><p class="eyebrow">Área privada</p><h1>Administración</h1><p>Gestiona inventario, costos, precios, ventas y pedidos.</p></section>
         <form id="admin-login" class="panel admin-login">
             <label>Clave de administrador <input id="admin-pin" type="password" required autocomplete="current-password"></label>
             <button class="button" type="submit">Entrar</button>
@@ -20,15 +20,34 @@
             <nav class="admin-tabs" aria-label="Secciones administrativas">
                 <button class="admin-tab active" type="button" data-admin-section="orders-section">Pedidos</button>
                 <button class="admin-tab" type="button" data-admin-section="inventory-section">Inventario</button>
+                <button class="admin-tab" type="button" data-admin-section="reports-section">Reportes</button>
             </nav>
+            <p id="admin-message" class="form-message" role="status" aria-live="polite"></p>
             <section id="orders-section" class="admin-section">
                 <h3>Pedidos recibidos</h3>
                 <div id="admin-orders"></div>
             </section>
             <section id="inventory-section" class="admin-section" hidden>
-                <h3>Inventario y catálogo</h3>
+                <h3>Inventario, costo y precios</h3>
+                <p class="notice">El precio de compra se usa para estimar el costo y la ganancia bruta. Los costos no se muestran a los clientes.</p>
                 <p class="notice">Para una imagen local, coloca el archivo dentro del proyecto y escribe su ruta, por ejemplo: <code>imgCargadores/cargador-20w.jpg</code>.</p>
                 <div id="admin-products"></div>
+            </section>
+            <section id="reports-section" class="admin-section" hidden>
+                <h3>Reporte de ventas</h3>
+                <p class="notice">El reporte incluye solo ventas registradas desde el panel. La ganancia es bruta estimada: no descuenta gastos operativos, impuestos ni envíos.</p>
+                <div class="report-filters">
+                    <label>Desde <input id="report-from" type="date"></label>
+                    <label>Hasta <input id="report-to" type="date"></label>
+                    <button id="export-sales-report" class="button button-secondary" type="button">Descargar CSV</button>
+                </div>
+                <div id="sales-summary" class="sales-summary" aria-live="polite"></div>
+                <div class="report-table-wrap">
+                    <table class="report-table">
+                        <thead><tr><th>Comprobante</th><th>Fecha</th><th>Cliente</th><th>Productos</th><th>Ingresos</th><th>Costo</th><th>Ganancia bruta</th></tr></thead>
+                        <tbody id="sales-report-rows"></tbody>
+                    </table>
+                </div>
             </section>
         </section>
     </main>

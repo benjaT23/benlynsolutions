@@ -832,7 +832,7 @@ header {
     gap: .4rem;
 }
 
-.price-input, .image-input {
+.price-input, .purchase-cost-input, .image-input {
     background: #0d1226;
     border: 1px solid rgba(0, 229, 255, .45);
     border-radius: 5px;
@@ -840,8 +840,102 @@ header {
     padding: .45rem;
 }
 
-.price-input { width: 5.5rem; }
+.price-input, .purchase-cost-input { width: 7rem; }
 .image-input { min-width: 16rem; }
+
+.admin-row label {
+    flex: 1 1 13rem;
+    justify-content: space-between;
+}
+
+.order-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .65rem;
+}
+
+.order-actions .button {
+    padding: .65rem .8rem;
+}
+
+.report-filters {
+    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.report-filters label {
+    display: grid;
+    gap: .35rem;
+}
+
+.report-filters input {
+    background: #0d1226;
+    border: 1px solid rgba(0, 229, 255, .45);
+    border-radius: 5px;
+    color: #fff;
+    padding: .6rem;
+}
+
+.sales-summary {
+    display: grid;
+    gap: .8rem;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    margin: 1rem 0;
+}
+
+.report-card {
+    background: rgba(0, 229, 255, .08);
+    border: 1px solid rgba(0, 229, 255, .28);
+    border-radius: 8px;
+    display: grid;
+    gap: .4rem;
+    padding: .8rem;
+}
+
+.report-card strong {
+    font-size: 1.15rem;
+}
+
+.report-table-wrap {
+    overflow-x: auto;
+}
+
+.report-table {
+    border-collapse: collapse;
+    min-width: 760px;
+    width: 100%;
+}
+
+.report-table th,
+.report-table td {
+    border-bottom: 1px solid rgba(0, 229, 255, .2);
+    padding: .7rem;
+    text-align: left;
+}
+
+.report-table th {
+    color: var(--neon-blue, #00e5ff);
+}
+
+@media (max-width: 600px) {
+    .admin-tabs {
+        flex-wrap: wrap;
+    }
+
+    .admin-tab {
+        padding: .7rem .65rem;
+    }
+
+    .order-actions {
+        align-items: stretch;
+        flex-direction: column;
+        width: 100%;
+    }
+}
 
 .container {
     max-width: 960px; /* Ancho máximo para el contenido */

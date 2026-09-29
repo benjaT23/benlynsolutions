@@ -101,19 +101,28 @@
             return (!from || day >= from) && (!to || day <= to);
         }).sort(function (left, right) { return right.soldAt.localeCompare(left.soldAt); });
     }
+    function saleHasCompleteCost(sale) {
+        return sale.saleCostComplete === true || (typeof sale.saleCostComplete === 'undefined' && typeof sale.saleCostTotal === 'number' && Number.isFinite(sale.saleCostTotal));
+    }
     function renderSalesReport() {
         var summary = document.getElementById('sales-summary'), rows = document.getElementById('sales-report-rows');
         if (!summary || !rows) return;
-        var sales = getReportSales(), revenue = 0, cost = 0, units = 0;
+        var sales = getReportSales(), revenue = 0, cost = 0, profit = 0, units = 0, pendingCostSales = 0;
         sales.forEach(function (sale) {
             revenue += Number(sale.saleTotal) || 0;
-            cost += Number(sale.saleCostTotal) || 0;
+            if (saleHasCompleteCost(sale)) {
+                cost += Number(sale.saleCostTotal) || 0;
+                profit += (Number(sale.saleTotal) || 0) - (Number(sale.saleCostTotal) || 0);
+            } else pendingCostSales += 1;
             units += (sale.saleItems || []).reduce(function (sum, item) { return sum + Number(item.quantity || 0); }, 0);
         });
-        summary.innerHTML = '<article class="report-card"><span>Ventas registradas</span><strong>' + sales.length + '</strong></article><article class="report-card"><span>Unidades vendidas</span><strong>' + units + '</strong></article><article class="report-card"><span>Ingresos</span><strong>' + money(revenue) + '</strong></article><article class="report-card"><span>Costo de productos</span><strong>' + money(cost) + '</strong></article><article class="report-card"><span>Ganancia bruta estimada</span><strong>' + money(revenue - cost) + '</strong></article>';
+        summary.innerHTML = '<article class="report-card"><span>Ventas registradas</span><strong>' + sales.length + '</strong></article><article class="report-card"><span>Unidades vendidas</span><strong>' + units + '</strong></article><article class="report-card"><span>Ingresos</span><strong>' + money(revenue) + '</strong></article><article class="report-card"><span>Costos de ventas completos</span><strong>' + money(cost) + '</strong></article><article class="report-card"><span>Ganancia bruta (ventas con costo)</span><strong>' + money(profit) + '</strong></article><article class="report-card"><span>Ventas con costo pendiente</span><strong>' + pendingCostSales + '</strong></article>';
         rows.innerHTML = sales.length ? sales.map(function (sale) {
             var itemNames = (sale.saleItems || []).map(function (item) { return escapeHtml(item.name) + ' × ' + Number(item.quantity); }).join(', ');
-            return '<tr><td>' + escapeHtml(sale.receiptNumber) + '</td><td>' + escapeHtml(new Date(sale.soldAt).toLocaleString('es-PE')) + '</td><td>' + escapeHtml(sale.name) + '</td><td>' + itemNames + '</td><td>' + money(sale.saleTotal) + '</td><td>' + money(sale.saleCostTotal) + '</td><td>' + money(sale.saleTotal - sale.saleCostTotal) + '</td></tr>';
+            var hasCost = saleHasCompleteCost(sale);
+            var costText = hasCost ? money(sale.saleCostTotal) : 'Pendiente';
+            var profitText = hasCost ? money(sale.saleTotal - sale.saleCostTotal) : 'Pendiente';
+            return '<tr><td>' + escapeHtml(sale.receiptNumber) + '</td><td>' + escapeHtml(new Date(sale.soldAt).toLocaleString('es-PE')) + '</td><td>' + escapeHtml(sale.name) + '</td><td>' + itemNames + '</td><td>' + money(sale.saleTotal) + '</td><td>' + costText + '</td><td>' + profitText + '</td></tr>';
         }).join('') : '<tr><td colspan="7">No hay ventas registradas en este período.</td></tr>';
     }
     function printReceipt(order) {
@@ -141,15 +150,12 @@
                 document.getElementById('admin-message').textContent = 'No se puede registrar la venta: falta un producto del pedido en el inventario.';
                 return;
             }
-            if (product.purchaseCost === null || product.purchaseCost === '' || !Number.isFinite(Number(product.purchaseCost)) || Number(product.purchaseCost) < 0) {
-                document.getElementById('admin-message').textContent = 'Ingresa un precio de compra válido para "' + product.name + '" antes de registrar esta venta.';
-                return;
-            }
+            var hasCost = product.purchaseCost !== null && product.purchaseCost !== '' && Number.isFinite(Number(product.purchaseCost)) && Number(product.purchaseCost) >= 0;
             saleItems.push({
                 id: product.id,
                 name: line.name || product.name,
                 quantity: Number(line.quantity),
-                unitCost: Number(product.purchaseCost),
+                unitCost: hasCost ? Number(product.purchaseCost) : null,
                 unitPrice: Number.isFinite(Number(line.unitPrice)) ? Number(line.unitPrice) : Number(product.price)
             });
         }
@@ -164,20 +170,22 @@
         }
         order.saleItems = saleItems;
         order.saleTotal = saleTotal;
-        order.saleCostTotal = saleItems.reduce(function (sum, item) { return sum + item.quantity * item.unitCost; }, 0);
+        order.saleCostComplete = saleItems.every(function (item) { return item.unitCost !== null; });
+        order.saleCostTotal = order.saleCostComplete ? saleItems.reduce(function (sum, item) { return sum + item.quantity * item.unitCost; }, 0) : null;
         order.soldAt = new Date().toISOString();
         order.receiptNumber = 'INT-' + order.soldAt.replace(/\D/g, '').slice(0, 14) + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
         order.isSale = true;
         write(STORAGE.orders, orders);
         renderAdmin();
         renderSalesReport();
-        if (!printReceipt(order)) document.getElementById('admin-message').textContent = 'Venta registrada. Permite las ventanas emergentes del navegador y usa "Imprimir comprobante interno" para obtener el comprobante.';
-        else document.getElementById('admin-message').textContent = 'Venta registrada y comprobante interno generado.';
+        if (!printReceipt(order)) document.getElementById('admin-message').textContent = 'Venta registrada. Permite las ventanas emergentes del navegador y pulsa "Imprimir comprobante interno".' + (order.saleCostComplete ? '' : ' El costo pendiente se puede completar en Inventario para calcular la ganancia.');
+        else document.getElementById('admin-message').textContent = 'Venta registrada y comprobante interno generado.' + (order.saleCostComplete ? '' : ' El costo queda pendiente; complétalo en Inventario para calcular la ganancia.');
     }
     function exportSalesReport() {
         var sales = getReportSales(), fields = ['Comprobante interno', 'Fecha', 'Cliente', 'Productos', 'Ingresos', 'Costo', 'Ganancia bruta'];
         var csvRows = [fields].concat(sales.map(function (sale) {
-            return [sale.receiptNumber, sale.soldAt, sale.name, (sale.saleItems || []).map(function (item) { return item.name + ' x' + item.quantity; }).join(', '), sale.saleTotal, sale.saleCostTotal, sale.saleTotal - sale.saleCostTotal];
+            var hasCost = saleHasCompleteCost(sale);
+            return [sale.receiptNumber, sale.soldAt, sale.name, (sale.saleItems || []).map(function (item) { return item.name + ' x' + item.quantity; }).join(', '), sale.saleTotal, hasCost ? sale.saleCostTotal : 'Pendiente', hasCost ? sale.saleTotal - sale.saleCostTotal : 'Pendiente'];
         }));
         var csv = '\uFEFF' + csvRows.map(function (row) { return row.map(function (value) { return '"' + String(value == null ? '' : value).replace(/"/g, '""') + '"'; }).join(';'); }).join('\r\n');
         var url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));

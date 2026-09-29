@@ -145,6 +145,11 @@
             document.getElementById('admin-message').textContent = 'No se encontró el pedido. Actualiza la página y vuelve a intentarlo.';
             return;
         }
+        if (order.status === 'not-sold') {
+            if (receiptWindow) receiptWindow.close();
+            document.getElementById('admin-message').textContent = 'Este pedido ya se marcó como no vendido y su stock fue devuelto; no se puede registrar como venta.';
+            return;
+        }
         if (order.isSale) {
             if (!printReceipt(order, receiptWindow)) document.getElementById('admin-message').textContent = 'El comprobante ya existe. Permite las ventanas emergentes para imprimirlo.';
             return;
@@ -184,6 +189,7 @@
         order.soldAt = new Date().toISOString();
         order.receiptNumber = 'INT-' + order.soldAt.replace(/\D/g, '').slice(0, 14) + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
         order.isSale = true;
+        order.status = 'sold';
         try {
             write(STORAGE.orders, orders);
         } catch (error) {
@@ -195,6 +201,61 @@
         renderSalesReport();
         if (!printReceipt(order, receiptWindow)) document.getElementById('admin-message').textContent = 'Venta registrada. Permite las ventanas emergentes del navegador y pulsa "Imprimir comprobante interno".' + (order.saleCostComplete ? '' : ' El costo pendiente se puede completar en Inventario para calcular la ganancia.');
         else document.getElementById('admin-message').textContent = 'Venta registrada y comprobante interno generado.' + (order.saleCostComplete ? '' : ' El costo queda pendiente; complétalo en Inventario para calcular la ganancia.');
+    }
+    function markOrderNotSold(orderIdValue) {
+        var orders = read(STORAGE.orders, []), order = orders.find(function (item) { return item.id === orderIdValue; });
+        var message = document.getElementById('admin-message');
+        if (!order) {
+            message.textContent = 'No se encontró el pedido. Actualiza la página y vuelve a intentarlo.';
+            return;
+        }
+        if (order.isSale || order.status === 'sold') {
+            message.textContent = 'Esta venta ya está registrada y no se puede devolver el stock desde aquí.';
+            return;
+        }
+        if (order.status === 'not-sold' || order.stockReturnedAt) {
+            message.textContent = 'Este pedido ya está marcado como no vendido y su stock ya fue devuelto.';
+            return;
+        }
+        if (!Array.isArray(order.items) || !order.items.length) {
+            message.textContent = 'No se puede devolver el stock: el pedido no contiene productos para inventariar.';
+            return;
+        }
+        var inventory = products(), previousInventory = JSON.stringify(inventory);
+        for (var index = 0; index < (order.items || []).length; index += 1) {
+            var line = order.items[index], product = inventory.find(function (item) { return item.id === line.id; });
+            if (!product || !Number.isInteger(Number(line.quantity)) || Number(line.quantity) < 1) {
+                message.textContent = 'No se puede devolver el stock: verifica los productos y cantidades del pedido en Inventario.';
+                return;
+            }
+        }
+        order.items.forEach(function (line) {
+            var product = inventory.find(function (item) { return item.id === line.id; });
+            product.stock = Number(product.stock) + Number(line.quantity);
+        });
+        var previousOrderState = { status: order.status, stockReturnedAt: order.stockReturnedAt };
+        order.status = 'not-sold';
+        order.stockReturnedAt = new Date().toISOString();
+        try {
+            write(STORAGE.orders, orders);
+            write(STORAGE.products, inventory);
+        } catch (error) {
+            order.status = previousOrderState.status;
+            if (previousOrderState.stockReturnedAt === undefined) delete order.stockReturnedAt;
+            else order.stockReturnedAt = previousOrderState.stockReturnedAt;
+            try {
+                write(STORAGE.orders, orders);
+                write(STORAGE.products, JSON.parse(previousInventory));
+            } catch (rollbackError) {
+                message.textContent = 'No se pudo completar o revertir el cambio de inventario. Revisa los pedidos y el stock antes de continuar.';
+                return;
+            }
+            message.textContent = 'No se pudo guardar el cambio de inventario. Comprueba el almacenamiento del navegador y vuelve a intentarlo.';
+            return;
+        }
+        renderProducts();
+        renderAdmin();
+        message.textContent = 'Pedido marcado como no vendido. Las unidades se devolvieron al inventario y el pedido quedó guardado en el historial.';
     }
     function exportSalesReport() {
         var sales = getReportSales(), fields = ['Comprobante interno', 'Fecha', 'Cliente', 'Productos', 'Ingresos', 'Costo', 'Ganancia bruta'];
@@ -239,11 +300,18 @@
             var message = 'Hola ' + order.name + ', somos BENLYNSOLUTIONS. Confirmamos tu pedido ' + order.id + ': ' + items + '. Total: ' + money(order.total) + '. Entrega: ' + destination + '. Fecha solicitada: ' + order.deliveryDate + '. Método de pago: ' + order.payment + '. Te escribimos para coordinar los detalles. Gracias por comprar con nosotros.';
             var phone = String(order.phone || '').replace(/\D/g, '');
             if (phone.length === 9) phone = '51' + phone;
-            var receiptButton = order.isSale ? '<button class="button button-secondary" type="button" data-action="print-receipt" data-id="' + escapeHtml(order.id) + '">Imprimir comprobante interno</button>' : '<button class="button" type="button" data-action="register-sale" data-id="' + escapeHtml(order.id) + '">Registrar venta e imprimir</button>';
-            return '<div class="order-row"><div class="order-main"><strong>' + escapeHtml(order.id) + ' · ' + escapeHtml(order.name) + (order.isSale ? ' · Venta registrada' : ' · Pedido pendiente de venta') + '</strong><span>' + escapeHtml(order.phone) + ' · ' + escapeHtml(order.email) + '</span><span>' + escapeHtml(order.address) + '</span><span>' + escapeHtml(destination) + '</span><span>' + escapeHtml(order.deliveryDate) + ' · ' + escapeHtml(order.deliveryMethod) + '</span><span>' + money(order.isSale ? order.saleTotal : order.total) + ' · ' + escapeHtml(order.payment) + '</span></div><div class="order-actions">' + receiptButton + '<a class="whatsapp-order" href="https://wa.me/' + encodeURIComponent(phone) + '?text=' + encodeURIComponent(message) + '" target="_blank" rel="noopener" aria-label="Enviar pedido por WhatsApp">WhatsApp</a></div></div>';
+            var pending = !order.isSale && order.status !== 'not-sold';
+            var statusLabel = order.isSale || order.status === 'sold' ? ' · Vendido' : order.status === 'not-sold' ? ' · No vendido (stock devuelto)' : ' · Pendiente de confirmar';
+            var receiptButton = order.isSale ? '<button class="button button-secondary" type="button" data-action="print-receipt" data-id="' + escapeHtml(order.id) + '">Imprimir comprobante interno</button>' : pending ? '<button class="button" type="button" data-action="register-sale" data-id="' + escapeHtml(order.id) + '">Marcar vendido e imprimir</button>' : '';
+            var notSoldButton = pending ? '<button class="button button-secondary" type="button" data-action="mark-not-sold" data-id="' + escapeHtml(order.id) + '">No vendido · devolver stock</button>' : '';
+            return '<div class="order-row"><div class="order-main"><strong>' + escapeHtml(order.id) + ' · ' + escapeHtml(order.name) + statusLabel + '</strong><span>' + escapeHtml(order.phone) + ' · ' + escapeHtml(order.email) + '</span><span>' + escapeHtml(order.address) + '</span><span>' + escapeHtml(destination) + '</span><span>' + escapeHtml(order.deliveryDate) + ' · ' + escapeHtml(order.deliveryMethod) + '</span><span>' + money(order.isSale ? order.saleTotal : order.total) + ' · ' + escapeHtml(order.payment) + '</span></div><div class="order-actions">' + receiptButton + notSoldButton + '<a class="whatsapp-order" href="https://wa.me/' + encodeURIComponent(phone) + '?text=' + encodeURIComponent(message) + '" target="_blank" rel="noopener" aria-label="Enviar pedido por WhatsApp">WhatsApp</a></div></div>';
         }).join('') : '<p>Aún no hay pedidos.</p>';
-        ordersNode.querySelectorAll('[data-action="register-sale"], [data-action="print-receipt"]').forEach(function (button) {
+        ordersNode.querySelectorAll('[data-action="register-sale"], [data-action="print-receipt"], [data-action="mark-not-sold"]').forEach(function (button) {
             button.addEventListener('click', function () {
+                if (button.dataset.action === 'mark-not-sold') {
+                    markOrderNotSold(button.dataset.id);
+                    return;
+                }
                 var receiptWindow = window.open('', '_blank');
                 if (button.dataset.action === 'register-sale') registerSale(button.dataset.id, receiptWindow);
                 else {
@@ -314,7 +382,7 @@
                 orderItems.push({ id: item.id, name: item.name, quantity: line.quantity, unitPrice: item.price });
                 item.stock -= line.quantity;
             }
-            data.id = orderId(); data.total = total; data.items = orderItems; data.createdAt = new Date().toISOString();
+            data.id = orderId(); data.total = total; data.items = orderItems; data.createdAt = new Date().toISOString(); data.status = 'pending';
             var orders = read(STORAGE.orders, []); orders.unshift(data); write(STORAGE.orders, orders); write(STORAGE.products, all); write(STORAGE.cart, []); form.reset(); renderProducts(); renderCart(); updateCartCount(); document.getElementById('checkout-message').textContent = 'Pedido ' + data.id + ' recibido. Te contactaremos para confirmar el pago y la entrega.';
             var paymentPanel = document.getElementById('yape-payment');
             var transferPanel = document.getElementById('transfer-payment');

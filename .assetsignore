@@ -2,4 +2,5 @@
 .git/
 .github/
 .vscode/
+node_modules/
 wrangler.jsonc

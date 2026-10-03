@@ -33,7 +33,8 @@
                     <p class="checkout-step">Paso 1 de 2 · Revisa tus productos</p>
                     <div id="cart-items"></div>
                     <p class="total-line"><strong>Total:</strong> <span id="cart-total">S/ 0.00</span></p>
-                    <button id="continue-checkout" class="button checkout-start" type="button" disabled>Continuar compra</button>
+                    <p id="checkout-unavailable" class="notice" role="status">La compra en línea está temporalmente desactivada. Estamos preparando el pago seguro con Culqi; todavía no se registran pedidos ni se realizan cobros.</p>
+                    <button id="continue-checkout" class="button checkout-start" type="button" disabled aria-describedby="checkout-unavailable">Pago seguro próximamente</button>
                     <p id="cart-message" class="form-message" role="status"></p>
                 </div>
                 <form id="checkout-form" class="panel checkout-form" hidden>

@@ -26,11 +26,6 @@
     }
     function write(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
     function money(value) { return 'S/ ' + Number(value).toFixed(2); }
-    function orderId() {
-        var now = new Date(), stamp = now.getFullYear().toString() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0') + '-' + String(now.getHours()).padStart(2, '0') + String(now.getMinutes()).padStart(2, '0') + String(now.getSeconds()).padStart(2, '0');
-        var random = Math.random().toString(36).slice(2, 7).toUpperCase();
-        return 'PED-' + stamp + '-' + random;
-    }
     function escapeHtml(value) {
         return String(value).replace(/[&<>"']/g, function (char) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[char]; });
     }
@@ -107,8 +102,6 @@
         }).join('') : '<p>Tu carrito está vacío.</p>';
         var total = lines.reduce(function (sum, line) { var item = all.find(function (product) { return product.id === line.id; }); return sum + (item ? item.price * line.quantity : 0); }, 0);
         var totalNode = document.getElementById('cart-total'); if (totalNode) totalNode.textContent = money(total);
-        var continueButton = document.getElementById('continue-checkout');
-        if (continueButton) continueButton.disabled = !lines.length;
         node.querySelectorAll('[data-action]').forEach(function (button) { button.addEventListener('click', function () {
             var currentCart = cart();
             var line = currentCart.find(function (entry) { return entry.id === button.dataset.id; });
@@ -415,25 +408,8 @@
             cartPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
         if (form) form.addEventListener('submit', function (event) {
-            event.preventDefault(); var lines = cart(), all = products();
-            if (!lines.length) { document.getElementById('checkout-message').textContent = 'Añade al menos un producto antes de enviar el pedido.'; return; }
-            var data = Object.fromEntries(new FormData(form).entries()), total = 0, orderItems = [];
-            for (var index = 0; index < lines.length; index += 1) {
-                var line = lines[index], item = all.find(function (product) { return product.id === line.id; });
-                if (!item || item.stock < line.quantity) { document.getElementById('checkout-message').textContent = 'El stock de uno de los productos cambió. Revisa tu carrito antes de continuar.'; return; }
-                total += item.price * line.quantity;
-                orderItems.push({ id: item.id, name: item.name, quantity: line.quantity, unitPrice: item.price });
-                item.stock -= line.quantity;
-            }
-            data.id = orderId(); data.total = total; data.items = orderItems; data.createdAt = new Date().toISOString(); data.status = 'pending';
-            var orders = read(STORAGE.orders, []); orders.unshift(data); write(STORAGE.orders, orders); write(STORAGE.products, all); write(STORAGE.cart, []); form.reset(); renderProducts(); renderCart(); updateCartCount(); document.getElementById('checkout-message').textContent = 'Pedido ' + data.id + ' recibido. Te contactaremos para confirmar el pago y la entrega.';
-            var paymentPanel = document.getElementById('yape-payment');
-            var transferPanel = document.getElementById('transfer-payment');
-            if (paymentPanel) paymentPanel.hidden = data.payment.indexOf('Yape') === -1;
-            if (transferPanel) transferPanel.hidden = data.payment !== 'Transferencia bancaria';
-            form.dataset.orderId = data.id;
-            form.dataset.orderTotal = money(data.total);
-            renderAdmin();
+            event.preventDefault();
+            document.getElementById('checkout-message').textContent = 'La compra todavía no está habilitada. No se registró el pedido ni se realizó ningún cobro.';
         });
         var login = document.getElementById('admin-login');
         if (login) {

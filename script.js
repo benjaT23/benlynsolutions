@@ -7,11 +7,11 @@
         ['audifonos-hoco-w48', 'Audífonos Bluetooth HOCO W48 RGB', 'Audífonos', 59.90, 'imgAudifonos/AUDIFONO-VINCHA-HOCO-W48-RGB-NEGRO-1.png', 'Audífonos inalámbricos con Bluetooth 5.3, iluminación RGB, micrófono y hasta 8 horas de reproducción con luces encendidas.', ['imgAudifonos/AUDIFONO-VINCHA-HOCO-W48-RGB-NEGRO-1.png', 'imgAudifonos/AUDIFONO-VINCHA-HOCO-W48-RGB-NEGRO2.png', 'imgAudifonos/AUDIFONO-VINCHA-HOCO-W48-RGB-NEGRO-3.png', 'imgAudifonos/AUDIFONO-VINCHA-HOCO-W48-RGB-NEGRO-4.png']],
         ['cargador-usbc-20w', 'Cargador rápido USB-C 20W', 'Cargadores', 39.90, '', 'Cargador compacto para carga rápida de dispositivos compatibles. Imagen pendiente de actualización.', []],
         ['cargador-auto', 'Cargador para auto doble USB', 'Cargadores', 29.90, '', 'Cargador vehicular con dos puertos USB para mantener tus dispositivos cargados durante el viaje.', []],
-        ['cargador-xiaomi-67w', 'Cargador Xiaomi 67 W con cable', 'Cargadores', 65.00, 'img Cargadores/Xiomi 67 W/Xiomi67W.png', 'Cargador de pared Xiaomi de 67 W para carga rápida. Incluye cable de 1 m y protección contra sobrecarga. La velocidad depende del dispositivo compatible.', ['img Cargadores/Xiomi 67 W/Xiomi67W.png', 'img Cargadores/Xiomi 67 W/Xiomi67W (2).png', 'img Cargadores/Xiomi 67 W/Xiomi67W(3).png']],
-        ['cargador-samsung-45w-negro', 'Cargador Samsung 45 W PD negro con cable', 'Cargadores', 55.00, 'img CargadoresSamsung/cargadorSamsung.png', 'Adaptador Samsung USB-C de 45 W con cable USB-C de 5 A. Compatible con carga rápida en dispositivos compatibles; la potencia efectiva depende del equipo.', ['img CargadoresSamsung/cargadorSamsung.png', 'img CargadoresSamsung/cargadorSamsung2.png', 'img CargadoresSamsung/cargadorSamsung3.png']],
-        ['cargador-samsung-45w-blanco', 'Cargador Samsung 45 W PD blanco con cable', 'Cargadores', 55.00, 'img CargadoresSamsung/cargadorSamsungBlanco.png', 'Adaptador Samsung USB-C de 45 W con cable USB-C de 5 A. Compatible con carga rápida en dispositivos compatibles; la potencia efectiva depende del equipo.', ['img CargadoresSamsung/cargadorSamsungBlanco.png', 'img CargadoresSamsung/cargadorSamsungBlanco2.png']],
-        ['cable-samsung-usbc-negro', 'Cable Samsung USB-C a USB-C negro 5 A', 'Cables', 18.00, 'img Cables Samsung/cable.png', 'Cable USB-C a USB-C de hasta 5 A, diseñado para carga rápida y transferencia de datos. La potencia depende del cargador y del dispositivo compatibles.', ['img Cables Samsung/cable.png', 'img Cables Samsung/cable2.png', 'img Cables Samsung/cable3.png']],
-        ['cable-samsung-usbc-blanco', 'Cable Samsung USB-C a USB-C blanco 5 A', 'Cables', 18.00, 'img Cables Samsung/cableblanco.png', 'Cable USB-C a USB-C de hasta 5 A, diseñado para carga rápida y transferencia de datos. La potencia depende del cargador y del dispositivo compatibles.', ['img Cables Samsung/cableblanco.png', 'img Cables Samsung/cableblanco2.png']],
+        ['cargador-xiaomi-67w', 'Cargador Xiaomi 67 W con cable', 'Cargadores', 65.00, 'img Cargadores/Xiomi 67 W/Xiomi67W.png', 'Potencia máxima de 67 W para carga rápida. Incluye cable de 1 m y protección contra sobrecarga. Según la ficha del producto, puede completar la carga en menos de una hora y es compatible con Xiaomi Mi 11 Ultra y Mi 11 Pro. La velocidad real depende del dispositivo y sus condiciones de carga.', ['img Cargadores/Xiomi 67 W/Xiomi67W.png', 'img Cargadores/Xiomi 67 W/Xiomi67W (2).png', 'img Cargadores/Xiomi 67 W/Xiomi67W(3).png']],
+        ['cargador-samsung-45w-negro', 'Cargador Samsung 45 W PD negro con cable', 'Cargadores', 55.00, 'img CargadoresSamsung/cargadorSamsung.png', 'Adaptador Samsung USB-C de hasta 45 W con USB Power Delivery 3.0 (PDO/PPS) y entrada de 100-240 V. Salidas indicadas: 5 V/3 A, 9 V/3 A, 15 V/3 A y 20 V/2.25 A; PPS de 3.3-21 V. Incluye cable USB-C de 5 A. La carga máxima depende del dispositivo compatible.', ['img CargadoresSamsung/cargadorSamsung.png', 'img CargadoresSamsung/cargadorSamsung2.png', 'img CargadoresSamsung/cargadorSamsung3.png']],
+        ['cargador-samsung-45w-blanco', 'Cargador Samsung 45 W PD blanco con cable', 'Cargadores', 55.00, 'img CargadoresSamsung/cargadorSamsungBlanco.png', 'Adaptador Samsung USB-C de hasta 45 W con USB Power Delivery 3.0 (PDO/PPS) y entrada de 100-240 V. Salidas indicadas: 5 V/3 A, 9 V/3 A, 15 V/3 A y 20 V/2.25 A; PPS de 3.3-21 V. Incluye cable USB-C de 5 A. La carga máxima depende del dispositivo compatible.', ['img CargadoresSamsung/cargadorSamsungBlanco.png', 'img CargadoresSamsung/cargadorSamsungBlanco2.png']],
+        ['cable-samsung-usbc-negro', 'Cable Samsung USB-C a USB-C negro 5 A', 'Cables', 18.00, 'img Cables Samsung/cable.png', 'Cable USB-C a USB-C de hasta 5 A y 100 W (20 V/5 A), con transferencia USB 2.0 de hasta 480 Mb/s. Admite carga superrápida Samsung hasta 25 W y Super Fast Charging 2.0 hasta 45 W, según dispositivo. Para la máxima potencia se necesita cargador compatible de más de 45 W; la carga real depende del equipo.', ['img Cables Samsung/cable.png', 'img Cables Samsung/cable2.png', 'img Cables Samsung/cable3.png']],
+        ['cable-samsung-usbc-blanco', 'Cable Samsung USB-C a USB-C blanco 5 A', 'Cables', 18.00, 'img Cables Samsung/cableblanco.png', 'Cable USB-C a USB-C de hasta 5 A y 100 W (20 V/5 A), con transferencia USB 2.0 de hasta 480 Mb/s. Admite carga superrápida Samsung hasta 25 W y Super Fast Charging 2.0 hasta 45 W, según dispositivo. Para la máxima potencia se necesita cargador compatible de más de 45 W; la carga real depende del equipo.', ['img Cables Samsung/cableblanco.png', 'img Cables Samsung/cableblanco2.png']],
         ['mouse-inalambrico', 'Mouse inalámbrico ergonómico', 'Mouse', 34.90, '', 'Mouse inalámbrico cómodo para trabajo, estudio y uso diario.', []],
         ['teclado-mecanico', 'Teclado mecánico RGB', 'Teclados', 129.90, '', 'Teclado mecánico con iluminación RGB para productividad y gaming.', []],
         ['camara-seguridad', 'Cámara de seguridad Wi-Fi', 'Cámaras', 149.90, '', 'Cámara Wi-Fi para monitoreo del hogar desde dispositivos compatibles.', []],
@@ -37,15 +37,30 @@
     function products() {
         var saved = read(STORAGE.products, null);
         if (!saved || !Array.isArray(saved) || !saved.length) { write(STORAGE.products, defaultProducts); return defaultProducts.slice(); }
+        var previousDescriptions = {
+            'cargador-xiaomi-67w': 'Cargador de pared Xiaomi de 67 W para carga rápida. Incluye cable de 1 m y protección contra sobrecarga. La velocidad depende del dispositivo compatible.',
+            'cargador-samsung-45w-negro': 'Adaptador Samsung USB-C de 45 W con cable USB-C de 5 A. Compatible con carga rápida en dispositivos compatibles; la potencia efectiva depende del equipo.',
+            'cargador-samsung-45w-blanco': 'Adaptador Samsung USB-C de 45 W con cable USB-C de 5 A. Compatible con carga rápida en dispositivos compatibles; la potencia efectiva depende del equipo.',
+            'cable-samsung-usbc-negro': 'Cable USB-C a USB-C de hasta 5 A, diseñado para carga rápida y transferencia de datos. La potencia depende del cargador y del dispositivo compatibles.',
+            'cable-samsung-usbc-blanco': 'Cable USB-C a USB-C de hasta 5 A, diseñado para carga rápida y transferencia de datos. La potencia depende del cargador y del dispositivo compatibles.'
+        };
+        var descriptionUpdated = false;
         var result = saved.map(function (item) {
             var base = defaultProducts.find(function (product) { return product.id === item.id; }) || {};
-            return Object.assign({}, base, item, { description: item.description || base.description || 'Descripción pendiente.', images: item.images && item.images.length ? item.images : (base.images || (item.image ? [item.image] : [])) });
+            var product = Object.assign({}, base, item, { description: item.description || base.description || 'Descripción pendiente.', images: item.images && item.images.length ? item.images : (base.images || (item.image ? [item.image] : [])) });
+            if (previousDescriptions[item.id] && item.description === previousDescriptions[item.id]) {
+                product.description = base.description;
+                descriptionUpdated = true;
+            }
+            return product;
         });
         var addedDefaults = defaultProducts.filter(function (product) {
             return !result.some(function (savedProduct) { return savedProduct.id === product.id; });
         });
         if (addedDefaults.length) {
             result = result.concat(addedDefaults);
+        }
+        if (addedDefaults.length || descriptionUpdated) {
             write(STORAGE.products, result);
         }
         return result;

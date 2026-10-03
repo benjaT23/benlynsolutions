@@ -1,0 +1,8 @@
+• Potencia máxima: Hasta 45 W de salida.
+• Tecnologías compatibles: Super Fast Charging 2.0, USB Power Delivery (PD) 3.0 (PDO y PPS) para ajustar el voltaje y corriente automáticamente.
+• Entrada de energía: 100-240V (apto para viajes internacionales).
+• Voltaje y corriente de salida:
+	• Normal: 5V / 3A
+	• Carga rápida (PDO): 9V / 3A, 15V / 3A y 20V / 2.25A
+	• Carga rápida (PPS): 3.3-21.0V con diferentes límites de amperaje.
+• Consumo en espera: Menor a 5 mW (bajo consumo en reposo).

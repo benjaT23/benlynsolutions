@@ -204,10 +204,14 @@ main {
     background: #0b1024;
     border: 1px solid var(--neon-blue, #00e5ff);
     border-radius: 14px;
+    box-sizing: border-box;
     box-shadow: 0 0 35px rgba(0, 229, 255, .35);
     color: #e9f7ff;
+    max-height: calc(100vh - 2rem);
     max-width: 900px;
-    padding: 2rem;
+    overflow: auto;
+    padding: 3.5rem 2rem 2rem;
+    position: relative;
     width: calc(100% - 2rem);
 }
 
@@ -377,7 +381,27 @@ header nav a {
 }
 
 .cart-link {
-    color: #007bff !important;
+    align-items: center;
+    background: linear-gradient(135deg, #121a38, #25123c);
+    border: 1px solid rgba(0, 229, 255, .7);
+    border-radius: 999px;
+    box-shadow: 0 0 18px rgba(0, 229, 255, .28), 0 0 28px rgba(157, 78, 221, .2);
+    color: #fff !important;
+    display: inline-flex;
+    gap: .55rem;
+    left: .9rem;
+    padding: .75rem 1rem;
+    position: fixed;
+    text-decoration: none;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: box-shadow .2s ease, transform .2s ease;
+    z-index: 20;
+}
+
+.cart-link:hover {
+    box-shadow: 0 0 22px rgba(0, 229, 255, .55), 0 0 32px rgba(255, 43, 214, .3);
+    transform: translateY(-50%) scale(1.04);
 }
 
 #cart-count {
@@ -386,9 +410,10 @@ header nav a {
     height: 1.4rem;
     place-items: center;
     border-radius: 50%;
-    background: #007bff;
+    background: linear-gradient(135deg, #00b8d4, #9d4edd);
     color: #fff;
     font-size: .75rem;
+    font-weight: 700;
 }
 
 .store-page {
@@ -826,11 +851,18 @@ header {
     .panel { padding: 1rem; }
     .yape-qr { max-width: 220px; }
     .company-logo-banner { max-height: 260px; }
-    .product-dialog { padding: 1.4rem 1rem; }
+    .product-dialog { padding: 3.5rem 1rem 1.4rem; }
     .cart-dialog { padding: 1rem .7rem; width: calc(100% - .8rem); }
     .product-detail-grid { grid-template-columns: 1fr; gap: 1rem; }
     .detail-main-image { height: 230px; }
     .product-detail-copy { padding-top: 0; }
+    .cart-link {
+        bottom: 1rem;
+        left: .75rem;
+        top: auto;
+        transform: none;
+    }
+    .cart-link:hover { transform: scale(1.04); }
 }
 
 .admin-row {
